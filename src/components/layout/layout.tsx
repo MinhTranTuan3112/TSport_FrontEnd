@@ -3,6 +3,8 @@ import { useLockedBody } from "../hooks/useBodyLock";
 import { SidebarWrapper } from "../sidebar/sidebar";
 import { SidebarContext } from "./layout-context";
 import { NavbarWrapper } from "../navbar/navbar";
+import Header from "../header/header";
+import Footer from "../footer/footer";
 
 interface Props {
   children: React.ReactNode;

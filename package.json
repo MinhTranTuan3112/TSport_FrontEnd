@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
     "@mui/x-charts": "^7.5.1",
     "@nextui-org/react": "^2.4.1",
     "framer-motion": "^11.2.10",
