@@ -20,7 +20,7 @@ const Footer = () => {
               </ul>
             </div>
           </div>
-          <div className="footer-contact row-footer">
+          <div className="footer-contact row-footer text-[1.2rem]">
             <p>
               Copyright &copy;{new Date().getFullYear()}; All rights reserved | This template is made by <a href="https://colorlib.com" target="_blank">Nhom5</a>
             </p>

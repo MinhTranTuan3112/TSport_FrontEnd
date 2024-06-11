@@ -13,7 +13,8 @@ const Header = () => {
             <div className="container-fluid">
                 <div className="row-header">
                     <div style={{ width: "20%" }}>
-                        <Link className="header__logo flex gap-2" href={"/"}>
+                        <Link className="header__logo flex gap-2
+                        text-[1.7rem]" href={"/"}>
                             {/* <img src="img/logo.png" alt="Logo"/> */}
                             <Image src={appLogo} height={30} width={30} alt={""} />
                             <div className="">TSport</div>
@@ -35,17 +36,21 @@ const Header = () => {
                     </div>
                     <div style={{ width: "20%", display: "flex", alignItems: "center" }}>
                         <div className="header__right">
-                            <div style={{ display: "flex", alignItems: "center", margin: "0 20px" }}>
+                            <Link className="cart flex items-center" href={""}>
+                                <ShoppingCartIcon style={{ color: "#ffff", width: "40px", height: "40px" }} />
+                                <div className="text-[1.25rem]">Giỏ hàng</div>
+                            </Link>
+                            {/* <div style={{ display: "flex", alignItems: "center", margin: "0 20px" }}>
                                 <ShoppingCartIcon style={{ color: "#ffff", width: "40px", height: "40px" }} />
                             </div>
-                            <div className="header__right__auth">
+                            <div className="header__right__auth flex">
                                 <Link href={"/signin"} style={{ display: "flex", cursor: "pointer" }}>
                                     Đăng nhập
                                 </Link>
                                 <div style={{ textAlign: "left" }}>
                                     Xin chào,
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
