@@ -9,48 +9,48 @@ import "./detail.css";
 const ShirtDetail = () => {
     return (
         <>
-            <Header/>
+            <Header />
             <div className="main-container">
-                <nav className="breadcrumb" style={{display: "flex"}}>
+                <nav className="breadcrumb" style={{ display: "flex" }}>
                     <Link href={"/"}><span >Home/ Câu lạc bộ/ </span></Link>
                     <span>Chi tiết áo đấu</span>
                 </nav>
                 <div className="container-fluid-home">
-                    <div style={{width: "40%"}}>
-                        
+                    <div style={{ width: "40%" }}>
+
                     </div>
-                    <div style={{width: "50%"}}>
-                        <div style={{width: "90%", border: "2px solid #000000", borderRadius: "20px", padding: "30px"}}>
-                            <h2 style={{fontSize: "2rem", fontWeight: "bold"}}>Product Name</h2>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <Rating defaultValue={2.5} precision={0.5} size="large" readOnly/>
+                    <div style={{ width: "50%" }}>
+                        <div style={{ width: "90%", border: "2px solid #000000", borderRadius: "20px", padding: "30px" }}>
+                            <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>Product Name</h2>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <Rating defaultValue={2.5} precision={0.5} size="large" readOnly />
                                 <span>(99 đánh giá)</span>
                             </div>
-                            <h2 style={{fontSize: "2rem", fontWeight: "bold"}}>123 VNĐ</h2>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <span style={{marginRight: "30px"}}>Kích thước:</span>
+                            <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>123 VNĐ</h2>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <span style={{ marginRight: "30px" }}>Kích thước:</span>
                                 <RadioGroup row >
                                     <FormControlLabel value="X" control={<Radio />} label="X" />
                                     <FormControlLabel value="XL" control={<Radio />} label="XL" />
                                     <FormControlLabel value="XXL" control={<Radio />} label="XXL" />
                                 </RadioGroup>
                             </div>
-                            <div style={{display: "flex", alignItems: "center"}}>
-                                <span style={{marginRight: "30px"}}>Màu sắc:</span>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <span style={{ marginRight: "30px" }}>Màu sắc:</span>
                                 <RadioGroup row >
                                     <FormControlLabel value="red" control={<Radio />} label="Đỏ" />
                                     <FormControlLabel value="orange" control={<Radio />} label="Cam" />
                                     <FormControlLabel value="yellow" control={<Radio />} label="Vàng" />
                                 </RadioGroup>
                             </div>
-                            <div style={{display: "flex", alignItems: "center"}}>
+                            <div style={{ display: "flex", alignItems: "center" }}>
                                 <div>
-                                    <Button style={{width: "60px", height: "60px", backgroundColor: "#f8d97b"}}><RemoveIcon/></Button>
-                                    <TextField style={{height: "60px"}} />
-                                    <Button style={{width: "60px", height: "60px", backgroundColor: "#f8d97b"}}><AddIcon/></Button>
+                                    <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><RemoveIcon /></Button>
+                                    <TextField style={{ height: "60px" }} />
+                                    <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><AddIcon /></Button>
                                 </div>
-                                <Button style={{height: "60px", backgroundColor: "#f8d97b", marginLeft: "50px"}}>
-                                    <ShoppingCartIcon/>
+                                <Button style={{ height: "60px", backgroundColor: "#f8d97b", marginLeft: "50px" }}>
+                                    <ShoppingCartIcon />
                                     Thêm vào giỏ
                                 </Button>
                             </div>
@@ -58,22 +58,22 @@ const ShirtDetail = () => {
                     </div>
                 </div>
                 <div className="container-fluid-home">
-                <div style={{padding: "30px", border: "2px solid #000000", borderRadius: "20px"}}>
-                    <div className="tab-content">
-                        <h2 style={{fontSize: "2rem", fontWeight: "bold"}}>Thông tin sản phẩm</h2>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
-                        
-                            <div style={{display: "flex"}}>
-                                <div style={{width: "60%", padding: "20px"}}>
-                                    <h2 style={{fontSize: "2rem", fontWeight: "bold"}}>Feedback:</h2>
-                                    <div style={{display: "flex"}}>
-                                        <div style={{width: "15%"}}>
-                                            <Avatar src="img/user.jpg" alt="Image" style={{width: "80px", height: "80px"}}/>
+                    <div style={{ padding: "30px", border: "2px solid #000000", borderRadius: "20px" }}>
+                        <div className="tab-content">
+                            <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>Thông tin sản phẩm</h2>
+                            <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
+                            <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+
+                            <div style={{ display: "flex" }}>
+                                <div style={{ width: "60%", padding: "20px" }}>
+                                    <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>Feedback:</h2>
+                                    <div style={{ display: "flex" }}>
+                                        <div style={{ width: "15%" }}>
+                                            <Avatar src="img/user.jpg" alt="Image" style={{ width: "80px", height: "80px" }} />
                                         </div>
-                                        <div style={{width: "85%"}}>
+                                        <div style={{ width: "85%" }}>
                                             <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                            <Rating defaultValue={2.5} precision={0.5} readOnly/>
+                                            <Rating defaultValue={2.5} precision={0.5} readOnly />
                                             <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
                                         </div>
                                     </div>
@@ -81,29 +81,29 @@ const ShirtDetail = () => {
                                         count={Math.ceil(17 / 7)}
                                     />
                                 </div>
-                                <div style={{width: "40%", padding: "20px"}}>
+                                <div style={{ width: "40%", padding: "20px" }}>
                                     <h2>Thêm feedback</h2>
-                                    <div style={{display: "flex", alignItems: "center"}}>
-                                        <p style={{marginRight: "10px"}}>Your Rating*:</p>
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <p style={{ marginRight: "10px" }}>Your Rating*:</p>
                                         <Rating defaultValue={3} precision={0.5} size="large" />
                                     </div>
                                     <form>
-                                        <div style={{display: "flex", alignItems: "start"}}>
-                                            <p style={{marginRight: "10px"}}>Your Review*:</p>
+                                        <div style={{ display: "flex", alignItems: "start" }}>
+                                            <p style={{ marginRight: "10px" }}>Your Review*:</p>
                                             <TextField
                                                 multiline
                                                 rows={4}
                                                 value={""}
-                                                style={{width: "80%"}}
+                                                style={{ width: "80%" }}
                                             />
                                         </div>
                                     </form>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-                <Footer/>
+                <Footer />
             </div>
         </>
     )

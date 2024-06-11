@@ -1,51 +1,56 @@
+'use server';
 import Link from "next/link";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
 import { Input } from "@nextui-org/react";
 import "./header.css";
+import Image from 'next/image';
 
+import appLogo from '../../img/logo.svg';
 const Header = () => {
     return (
-        <div className="header">
-        <div className="container-fluid">
-            <div className="row-header">
-                <div style={{width: "20%"}}>
-                    <div className="header__logo">
-                        <img src="img/logo.png" alt="Logo"/>
+        <header className="header">
+            <div className="container-fluid">
+                <div className="row-header">
+                    <div style={{ width: "20%" }}>
+                        <Link className="header__logo flex gap-2" href={"/"}>
+                            {/* <img src="img/logo.png" alt="Logo"/> */}
+                            <Image src={appLogo} height={30} width={30} alt={""} />
+                            <div className="">TSport</div>
+                        </Link>
                     </div>
-                </div>
-                <div style={{width: "40%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <div style={{width: "80%"}}>
-                        <Input
-                        startContent={<SearchIcon style={{color: "#000000"}}/>}
-                        isClearable
-                        className="w-full"
-                        classNames={{
-                            input: "w-full",
-                            mainWrapper: "w-full",
-                        }}
-                        placeholder="Search..."
-                    />
-                    </div>
-                </div>
-                <div style={{width: "20%", display: "flex", alignItems: "center"}}>
-                    <div className="header__right">
-                        <div style={{display: "flex", alignItems: "center", margin: "0 20px"}}>
-                            <ShoppingCartIcon style={{color: "#ffff", width: "40px", height: "40px"}}/>
+                    <div style={{ width: "40%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ width: "80%" }}>
+                            <Input
+                                startContent={<SearchIcon style={{ color: "#000000" }} />}
+                                isClearable
+                                className="w-full text-black"
+                                classNames={{
+                                    input: "w-full",
+                                    mainWrapper: "w-full",
+                                }}
+                                placeholder="Tìm kiếm..."
+                            />
                         </div>
-                        <div className="header__right__auth">
-                            <Link href={"/signin"} style={{display: "flex", cursor: "pointer"}}>
-                                Đăng nhập
-                            </Link>
-                            <div style={{textAlign: "left"}}>
-                                Xin chào,
+                    </div>
+                    <div style={{ width: "20%", display: "flex", alignItems: "center" }}>
+                        <div className="header__right">
+                            <div style={{ display: "flex", alignItems: "center", margin: "0 20px" }}>
+                                <ShoppingCartIcon style={{ color: "#ffff", width: "40px", height: "40px" }} />
+                            </div>
+                            <div className="header__right__auth">
+                                <Link href={"/signin"} style={{ display: "flex", cursor: "pointer" }}>
+                                    Đăng nhập
+                                </Link>
+                                <div style={{ textAlign: "left" }}>
+                                    Xin chào,
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </header>
     )
 }
 

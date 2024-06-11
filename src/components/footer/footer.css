@@ -4,7 +4,7 @@
   -moz-transition: all 0.25s ease;
   -webkit-transition: all 0.25s ease;
   -ms-transition: all 0.25s ease;
-  font-size: 1.5rem;
+  /* font-size: 1.5rem; */
   font-weight: 500;
   color: #000000;
   max-height: 200px;
@@ -17,7 +17,7 @@
 }
 
 .footer__nav {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .footer__nav ul li {
