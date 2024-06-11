@@ -7,9 +7,8 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className="footer py-10" style={{ width: "100%", bottom: "0" }}>
+    <footer className="footer py-10" style={{ width: "100%", bottom: "0" }}>
       <div className="container-footer flex items-center">
-
         <div className='flex flex-col gap-10' style={{ width: "60%" }}>
           <div className="row-footer" style={{ display: "flex", justifyContent: "center" }}>
             <div className="footer__nav">
@@ -36,7 +35,7 @@ const Footer = () => {
           </ul>
         </div>
       </div>
-    </div>
+    </footer>
   )
 }
 

@@ -1,4 +1,3 @@
-'use server';
 import Footer from '@/components/footer/footer';
 import Header from '@/components/header/header';
 import React from 'react';
@@ -6,12 +5,18 @@ import exGround from "../img/OIP.jpg";
 import Link from 'next/link';
 import Image from 'next/image';
 import "./home.css";
+import MainNavBar from '@/components/MainNavBar';
+import HomeContent from '@/components/home/homeContent';
 
 const home = () => {
     return (
         <>
-            <Header />
-            <div className="main-container">
+            {/* <Header /> */}
+            <MainNavBar/>
+            <main className="main-container flex justify-center">
+                <HomeContent />
+            </main>
+            {/* <div className="main-container">
                 <section className="discount">
                     <div className="container">
                         <div style={{ width: "80%", display: "flex" }}>
@@ -69,8 +74,8 @@ const home = () => {
                         </div>
                     </Link>
                 </div>
-                <Footer />
-            </div>
+            </div> */}
+            <Footer />
         </>
     );
 };
