@@ -7,17 +7,18 @@ import Link from "next/link";
 import Header from "@/components/header/header";
 import Image from "next/image";
 import exGround from "../../img/OIP.jpg";
+import MainNavBar from "@/components/MainNavBar";
 
 const SignIn = () => {
   return (
     <>
-      <Header />
+      <MainNavBar />
       <div className="main-container">
         <div className="container" style={{ height: "70vh" }}>
           <div className="login-container">
             <div className="left_side-login" style={{ width: "35%" }}>
-              <h1 id="title-text">Chào mừng sự trở lại của bạn</h1>
-              <Input label='Email' variant='bordered' className="text-wrapper-5" />
+              <h1 id="title-text" className="mb-3 font-bold text-xl">Chào mừng sự trở lại của bạn</h1>
+              <Input label='Email' variant='bordered' className="text-wrapper-5 mb-3" />
               <Input label='Mật khẩu' variant='bordered' className="text-wrapper-5" type="password" />
               <Button
                 color="primary"

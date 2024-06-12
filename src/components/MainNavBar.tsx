@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react';
 import React from 'react'
 import { AcmeLogo } from './icons/acmelogo';
@@ -6,8 +6,11 @@ import AppIcon from './icons/appIcon';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 type Props = {}
 
+
+
 const MainNavBar = (props: Props) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
 
     const menuItems = [
         "Cá nhân",
@@ -16,6 +19,7 @@ const MainNavBar = (props: Props) => {
         "Cầu thủ",
         "Log Out"
     ];
+
 
     return (
         <Navbar
@@ -31,7 +35,7 @@ const MainNavBar = (props: Props) => {
             {/*mobile view */}
             <NavbarContent className="sm:hidden pr-3" justify="center">
                 <NavbarBrand>
-                    <Link className='text-inherit flex gap-1' href=''>
+                    <Link className='text-inherit flex gap-1' href='/'>
                         <AppIcon size='1.5rem' />
                         <p className="font-bold text-inherit text-[1.5rem]">TSport</p>
                     </Link>
@@ -40,7 +44,7 @@ const MainNavBar = (props: Props) => {
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarBrand >
-                    <Link className='text-inherit flex gap-1' href=''>
+                    <Link className='text-inherit flex gap-1' href='/'>
                         <AppIcon size='1.5rem' />
                         <p className="font-bold text-inherit text-[1.5rem]">TSport</p>
                     </Link>
@@ -70,7 +74,7 @@ const MainNavBar = (props: Props) => {
                     </Link>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
-                    <Link href="" className='text-red-600'>Đăng nhập</Link>
+                    <Link href="/signin" className='text-red-600'>Đăng nhập</Link>
                 </NavbarItem>
             </NavbarContent>
 
