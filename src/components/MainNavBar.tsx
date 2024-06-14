@@ -4,12 +4,31 @@ import React from 'react'
 import { AcmeLogo } from './icons/acmelogo';
 import AppIcon from './icons/appIcon';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-type Props = {}
+import { createClient } from '@/utils/supabase/client';
+import useSWR from 'swr';
 
 
+type Props = {
+    signout: () => Promise<void>;
+};
 
-const MainNavBar = (props: Props) => {
+const getCurrentAuthUser = async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.getUser();
+
+    return { data, error };
+};
+
+
+const MainNavBar = ({ signout }: Props) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+    // const { data, error } = await supabase.auth.getUser();
+
+    const { data, error } = useSWR('getCurrentAuthUser', getCurrentAuthUser);
+
+    const user = data?.data.user;
+    const isAuthenticated: boolean = !!user;
 
 
     const menuItems = [
@@ -20,10 +39,18 @@ const MainNavBar = (props: Props) => {
         "Log Out"
     ];
 
+    const performSignout = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        await signout();
+
+    };
+
+    
+
 
     return (
         <Navbar
-        
+
             isBordered
             isMenuOpen={isMenuOpen}
             onMenuOpenChange={setIsMenuOpen}>
@@ -74,7 +101,11 @@ const MainNavBar = (props: Props) => {
                     </Link>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
-                    <Link href="/signin" className='text-red-600'>Đăng nhập</Link>
+                    {isAuthenticated ? (
+                        <Link href="/" onClick={performSignout} className='text-red-600'>Đăng xuất</Link>
+                    ) : (
+                        <Link href="/signin" className='text-red-600'>Đăng nhập</Link>
+                    )}
                 </NavbarItem>
             </NavbarContent>
 

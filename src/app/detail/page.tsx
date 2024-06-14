@@ -9,7 +9,7 @@ import "./detail.css";
 const ShirtDetail = () => {
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <div className="main-container">
                 <nav className="breadcrumb" style={{ display: "flex" }}>
                     <Link href={"/"}><span >Home/ Câu lạc bộ/ </span></Link>
@@ -103,7 +103,7 @@ const ShirtDetail = () => {
                         </div>
                     </div>
                 </div>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         </>
     )

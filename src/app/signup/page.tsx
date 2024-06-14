@@ -1,3 +1,4 @@
+'use server'
 import React from "react";
 import "./signup.css";
 import avtPatten from "../../img/download.jpg";
@@ -6,33 +7,39 @@ import Image from "next/image";
 import { Button, Input } from "@nextui-org/react";
 import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
+import MainNavBar from "@/components/MainNavBar";
+import { signin, signup } from "../signin/actions";
 
 const SignUp = () => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      {/* <MainNavBar/> */}
       <div className="main-container">
         <div className="container">
           <div className="register">
             <div className="frame">
               <div className="join-alem-community">Tham gia cùng chúng tôi</div>
               <br />
-              <div className="frame-2">
+              <form className="frame-2">
                 <div className="mb-3 name">
                   <Input label='Họ' variant='bordered' className="text-wrapper-5" />
                   <Input label='Tên' variant='bordered' className="text-wrapper-5" />
                 </div>
-                <Input label='SĐT' variant='bordered' className="text-wrapper-5" />
-                <Input label='Email' variant='bordered' className="text-wrapper-5" />
-                <Input label='Mật khẩu' variant='bordered' className="text-wrapper-5" />
-                <Input label='Xác nhận mật khẩu' variant='bordered' className="text-wrapper-5" />
+                {/* <Input label='SĐT' variant='bordered' className="text-wrapper-5" /> */}
+                <div className="flex flex-col gap-3">
+                  <Input label='Email' name="email" type="email" variant='bordered' className="text-wrapper-5" required />
+                  <Input label='Mật khẩu' name="password" type="password" variant='bordered' className="text-wrapper-5" required/>
+                  <Input label='Xác nhận mật khẩu' type="password" variant='bordered' className="text-wrapper-5" required />
+                </div>
 
                 <Button
-                  className="button-resize text-wrapper-7"
+                  className="button-resize text-wrapper-7 mb-3"
+                  type="submit"
+                  formAction={signup}
                 >
                   Đăng ký
                 </Button>
-                <br />
                 <div>
                   Đã có tài khoản?{" "}
                   <Link href={"/signin"}
@@ -41,14 +48,13 @@ const SignUp = () => {
                     Đăng nhập ngay
                   </Link>
                 </div>
-              </div>
+              </form>
             </div>
             <div className="img-container">
               <Image className="image" alt="Avatar" src={avtPatten} />
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

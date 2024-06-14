@@ -9,7 +9,7 @@ import Footer from "@/components/footer/footer";
 const ListShirt = () => {
     return (
         <>
-            <Header/>
+            {/* <Header/> */}
             <div className="main-container">
                 <nav className="breadcrumb" style={{display: "flex"}}>
                     <Link href={"/"}><span>Home/ Câu lạc bộ/</span> </Link>
@@ -84,7 +84,7 @@ const ListShirt = () => {
                         </div>
                     </div>
                 </div>
-                <Footer/>
+                {/* <Footer/> */}
             </div>
         </>
     )

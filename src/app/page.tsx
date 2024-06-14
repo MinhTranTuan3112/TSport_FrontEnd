@@ -12,7 +12,7 @@ const home = () => {
     return (
         <>
             {/* <Header /> */}
-            <MainNavBar/>
+            {/* <MainNavBar/> */}
             <main className="main-container flex justify-center">
                 <HomeContent />
             </main>
@@ -75,7 +75,7 @@ const home = () => {
                     </Link>
                 </div>
             </div> */}
-            <Footer />
+            
         </>
     );
 };
