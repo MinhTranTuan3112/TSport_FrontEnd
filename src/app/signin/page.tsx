@@ -1,4 +1,4 @@
-'use server';
+'use client';
 import React from "react";
 import "./signin.css";
 import { Button, Input } from "@nextui-org/react";
@@ -9,6 +9,8 @@ import Image from "next/image";
 import exGround from "../../img/OIP.jpg";
 import MainNavBar from "@/components/MainNavBar";
 import { signin } from "./actions";
+import SignInButton from "./signInButton";
+import MailIcon from '@mui/icons-material/Mail';
 
 const SignIn = () => {
   return (
@@ -17,18 +19,16 @@ const SignIn = () => {
       <div className="main-container">
         <div className="container" style={{ height: "70vh" }}>
           <div className="login-container">
-            <form className="left_side-login" style={{ width: "35%" }}>
+            <form className="left_side-login" style={{ width: "35%" }} id="signin_form">
               <h1 id="title-text" className="mb-3 font-bold text-xl">Chào mừng sự trở lại của bạn</h1>
-              <Input label='Email' name="email" type="email" variant='bordered' className="text-wrapper-5 mb-3" required />
-              <Input label='Mật khẩu' name="password" variant='bordered' className="text-wrapper-5" type="password" required />
-              <Button
-                color="primary"
-                className="submit_button"
-                type="submit"
-                formAction={signin}
-              >
-                Đăng nhập
-              </Button>
+              <Input label='Email'
+                name="email" type="email" variant='bordered' className="text-wrapper-5 mb-3"
+                required />
+              <Input label='Mật khẩu' name="password" variant='bordered' className="text-wrapper-5"
+                type="password"
+                required />
+
+              <SignInButton />
 
               <Link href={"/signup"}
                 style={{ textDecoration: "none", marginTop: "10px", color: "blue", cursor: "pointer" }}

@@ -9,6 +9,7 @@ import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import MainNavBar from "@/components/MainNavBar";
 import { signin, signup } from "../signin/actions";
+import SignUpButton from "./signUpButton";
 
 const SignUp = () => {
   return (
@@ -21,7 +22,7 @@ const SignUp = () => {
             <div className="frame">
               <div className="join-alem-community">Tham gia cùng chúng tôi</div>
               <br />
-              <form className="frame-2">
+              <form className="frame-2" id="signup_form">
                 <div className="mb-3 name">
                   <Input label='Họ' variant='bordered' className="text-wrapper-5" />
                   <Input label='Tên' variant='bordered' className="text-wrapper-5" />
@@ -29,17 +30,10 @@ const SignUp = () => {
                 {/* <Input label='SĐT' variant='bordered' className="text-wrapper-5" /> */}
                 <div className="flex flex-col gap-3">
                   <Input label='Email' name="email" type="email" variant='bordered' className="text-wrapper-5" required />
-                  <Input label='Mật khẩu' name="password" type="password" variant='bordered' className="text-wrapper-5" required/>
+                  <Input label='Mật khẩu' name="password" type="password" variant='bordered' className="text-wrapper-5" required />
                   <Input label='Xác nhận mật khẩu' type="password" variant='bordered' className="text-wrapper-5" required />
                 </div>
-
-                <Button
-                  className="button-resize text-wrapper-7 mb-3"
-                  type="submit"
-                  formAction={signup}
-                >
-                  Đăng ký
-                </Button>
+                <SignUpButton />
                 <div>
                   Đã có tài khoản?{" "}
                   <Link href={"/signin"}

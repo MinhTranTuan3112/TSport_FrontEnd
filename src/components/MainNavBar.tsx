@@ -1,12 +1,11 @@
 'use client';
-import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react';
+import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle, useDisclosure } from '@nextui-org/react';
 import React from 'react'
 import { AcmeLogo } from './icons/acmelogo';
 import AppIcon from './icons/appIcon';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { createClient } from '@/utils/supabase/client';
 import useSWR from 'swr';
-
 
 type Props = {
     signout: () => Promise<void>;
@@ -19,11 +18,16 @@ const getCurrentAuthUser = async () => {
     return { data, error };
 };
 
+const menuItems = [
+    "Cá nhân",
+    "Áo đấu",
+    "Câu lạc bộ",
+    "Cầu thủ",
+    "Log Out"
+];
 
 const MainNavBar = ({ signout }: Props) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-    // const { data, error } = await supabase.auth.getUser();
 
     const { data, error } = useSWR('getCurrentAuthUser', getCurrentAuthUser);
 
@@ -31,21 +35,10 @@ const MainNavBar = ({ signout }: Props) => {
     const isAuthenticated: boolean = !!user;
 
 
-    const menuItems = [
-        "Cá nhân",
-        "Áo đấu",
-        "Câu lạc bộ",
-        "Cầu thủ",
-        "Log Out"
-    ];
-
     const performSignout = async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
         await signout();
-
     };
-
-    
 
 
     return (
