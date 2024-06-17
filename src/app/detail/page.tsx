@@ -1,4 +1,4 @@
-import { Avatar, Button, FormControlLabel, Pagination, Radio, RadioGroup, Rating, TextField } from "@mui/material";
+import { Avatar, Pagination, Rating, TextField } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -8,6 +8,9 @@ import Image from 'next/image';
 import Footer from "@/components/footer/footer";
 import "./detail.css";
 import OIPImage from '../../img/OIP.jpg';
+import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
+
+
 const ShirtDetail = () => {
     return (
         <>
@@ -19,7 +22,7 @@ const ShirtDetail = () => {
                 </nav>
                 <div className="container-fluid-home">
                     <div style={{ width: "40%" }}>
-                        <Image src={OIPImage} height={300} width={300} alt={""}/>
+                        <Image src={OIPImage} height={300} width={300} alt={""} />
                     </div>
                     <div style={{ width: "50%" }}>
                         <div style={{ width: "90%", border: "2px solid #000000", borderRadius: "20px", padding: "30px" }}>
@@ -28,25 +31,43 @@ const ShirtDetail = () => {
                                 <Rating defaultValue={2.5} precision={0.5} size="large" readOnly />
                                 <span>(99 đánh giá)</span>
                             </div>
-                            <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>123 VNĐ</h2>
-                            <div style={{ display: "flex", alignItems: "center" }}>
+                            <h2 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem" }}>123.000 VNĐ</h2>
+                            <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
                                 <span style={{ marginRight: "30px" }}>Kích thước:</span>
-                                <RadioGroup row >
+                                {/* <RadioGroup row >
                                     <FormControlLabel value="X" control={<Radio />} label="X" />
                                     <FormControlLabel value="XL" control={<Radio />} label="XL" />
                                     <FormControlLabel value="XXL" control={<Radio />} label="XXL" />
+                                </RadioGroup> */}
+                                <RadioGroup color="danger">
+                                    <div className="flex flex-row gap-4">
+                                        <Radio value="X">X</Radio>
+                                        <Radio value="XL">XL</Radio>
+                                        <Radio value="SM">SM</Radio>
+                                    </div>
                                 </RadioGroup>
                             </div>
-                            <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
                                 <span style={{ marginRight: "30px" }}>Màu sắc:</span>
-                                <RadioGroup row >
+                                {/* <RadioGroup row >
                                     <FormControlLabel value="red" control={<Radio />} label="Đỏ" />
                                     <FormControlLabel value="orange" control={<Radio />} label="Cam" />
                                     <FormControlLabel value="yellow" control={<Radio />} label="Vàng" />
+                                </RadioGroup> */}
+                                <RadioGroup color="danger">
+                                    <div className="flex flex-row gap-4">
+                                        <Radio value="Đỏ">Đỏ</Radio>
+                                        <Radio value="Cam">Cam</Radio>
+                                        <Radio value="Vàng">Vàng</Radio>
+                                    </div>
                                 </RadioGroup>
                             </div>
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <div>
+                            <div className="flex items-center gap-2">
+                                <Input type="number" label='Số lượng' className="w-1/3" />
+                                <Button type="button"
+                                    className="text-white bg-red-600"
+                                    startContent={<ShoppingCartIcon />}>Thêm vào giỏ hàng</Button>
+                                {/* <div>
                                     <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><RemoveIcon /></Button>
                                     <TextField style={{ height: "60px" }} />
                                     <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><AddIcon /></Button>
@@ -54,7 +75,7 @@ const ShirtDetail = () => {
                                 <Button style={{ height: "60px", backgroundColor: "#f8d97b", marginLeft: "50px" }}>
                                     <ShoppingCartIcon />
                                     Thêm vào giỏ
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                     </div>
