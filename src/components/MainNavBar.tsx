@@ -1,5 +1,5 @@
 'use client';
-import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle, useDisclosure } from '@nextui-org/react';
+import { Badge, Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle, useDisclosure } from '@nextui-org/react';
 import React from 'react'
 import { AcmeLogo } from './icons/acmelogo';
 import AppIcon from './icons/appIcon';
@@ -89,8 +89,10 @@ const MainNavBar = ({ signout }: Props) => {
             <NavbarContent justify="end">
                 <NavbarItem className='flex'>
                     <Link href={''} className='text-inherit'>
-                        <ShoppingCartIcon />
-                        <div className="">Giỏ hàng</div>
+                        <Badge content="1" color='danger'>
+                            <ShoppingCartIcon />
+                            {/* <div className="">Giỏ hàng</div> */}
+                        </Badge>
                     </Link>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
