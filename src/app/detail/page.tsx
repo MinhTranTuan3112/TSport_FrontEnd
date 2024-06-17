@@ -4,20 +4,22 @@ import AddIcon from '@mui/icons-material/Add';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Header from "@/components/header/header";
 import Link from "next/link";
+import Image from 'next/image';
 import Footer from "@/components/footer/footer";
 import "./detail.css";
+import OIPImage from '../../img/OIP.jpg';
 const ShirtDetail = () => {
     return (
         <>
             {/* <Header /> */}
             <div className="main-container">
                 <nav className="breadcrumb" style={{ display: "flex" }}>
-                    <Link href={"/"}><span >Home/ Câu lạc bộ/ </span></Link>
+                    <Link href={"/"}><span >Home/ Áo đấu/ </span></Link>
                     <span>Chi tiết áo đấu</span>
                 </nav>
                 <div className="container-fluid-home">
                     <div style={{ width: "40%" }}>
-
+                        <Image src={OIPImage} height={300} width={300} alt={""}/>
                     </div>
                     <div style={{ width: "50%" }}>
                         <div style={{ width: "90%", border: "2px solid #000000", borderRadius: "20px", padding: "30px" }}>

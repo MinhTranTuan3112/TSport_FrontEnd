@@ -70,7 +70,7 @@ const MainNavBar = ({ signout }: Props) => {
                     </Link>
                 </NavbarBrand>
                 <NavbarItem>
-                    <Link color="foreground" href="">
+                    <Link color="foreground" href={'/list'}>
                         Áo đấu
                     </Link>
                 </NavbarItem>
