@@ -69,13 +69,13 @@ const MainNavBar = ({ signout }: Props) => {
                         <p className="font-bold text-inherit text-[1.5rem]">TSport</p>
                     </Link>
                 </NavbarBrand>
-                <NavbarItem>
-                    <Link color="foreground" href={'/list'}>
+                <NavbarItem isActive>
+                    <Link color="foreground" className='text-red-600' href={'/list'}>
                         Áo đấu
                     </Link>
                 </NavbarItem>
-                <NavbarItem isActive>
-                    <Link href="" aria-current="page" className='text-red-600'>
+                <NavbarItem>
+                    <Link color='foreground' href="">
                         Câu lạc bộ
                     </Link>
                 </NavbarItem>
@@ -88,7 +88,7 @@ const MainNavBar = ({ signout }: Props) => {
 
             <NavbarContent justify="end">
                 <NavbarItem className='flex'>
-                    <Link href={''} className='text-inherit'>
+                    <Link href={'/cart/details'} className='text-inherit'>
                         <Badge content="1" color='danger'>
                             <ShoppingCartIcon />
                             {/* <div className="">Giỏ hàng</div> */}
@@ -113,7 +113,7 @@ const MainNavBar = ({ signout }: Props) => {
                             color={
                                 index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
                             }
-                            href="#"
+                            href=""
                             size="lg"
                         >
                             {item}
