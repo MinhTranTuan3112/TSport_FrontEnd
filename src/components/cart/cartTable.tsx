@@ -69,7 +69,7 @@ const CartTable = (props: Props) => {
             selectionMode="multiple"
             selectionBehavior="toggle"
             selectedKeys={selectedKeys}
-            className='max-w-[70%] my-0 mx-auto'
+            className='max-w-[80%] my-0 mx-auto'
             onSelectionChange={handleSelectionChange}
         >
             <TableHeader columns={columns}>
