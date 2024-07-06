@@ -8,7 +8,22 @@ import Link from "next/link";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortSelect from "../../components/shirts/sortSelect";
-const ListShirt = () => {
+import { fetchPagedShirts } from "../service/shirt_service";
+import { Suspense } from 'react'
+import ShirtCard from "@/components/shirts/shirtCard";
+
+import PaginationBar from "@/components/shirts/paginationBar";
+
+
+type Props = {
+  searchParams: {
+    page?: number;
+    startPrice?: number;
+    endPrice?: number;
+  };
+};
+
+const ListShirt = async ({ searchParams }: Props) => {
   const list = [
     {
       title: "Orange",
@@ -107,6 +122,13 @@ const ListShirt = () => {
       rating: 5,
     },
   ];
+
+  const pagedResult: PagedResult<PagedShirt> = await fetchPagedShirts(searchParams.page ? + searchParams.page : 1, 10);
+  const shirts = pagedResult.items;
+
+  console.log({ pagedResult });
+
+
   return (
     <>
       {/* <Header/> */}
@@ -182,35 +204,16 @@ const ListShirt = () => {
             </div>
 
             <div className="gap-4 grid sm:grid-cols-4 w-full">
-              {list.map((item, index) => (
-                <Card shadow="md" key={index} className="product-item">
-                  <CardBody className="overflow-visible p-0 product-img">
-                    <Image className="img-fluid w-full" src={exGr} alt={item.title} />
-                    <Link href={"/detail"} style={{ height: "0" }}>
-                      <div className="product-action">
-                        <div className="btn btn-outline-dark btn-square" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                          <h3 style={{ margin: "0" }}>Chi tiết</h3>
-                        </div>
-                      </div>
-                    </Link>
-                  </CardBody>
-                  <CardFooter className="text-center" style={{ flexDirection: "column" }}>
-                    <h3 style={{ margin: "0" }}>{item.title}</h3>
-                    <div style={{
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "1rem"
-                    }}>
-                      <h5 style={{ margin: "0" }} className="font-bold">{item.price * 80 / 100} VNĐ</h5>
-                      <h6 className="text-muted"><del>{item.price} VNĐ</del></h6>
-                    </div>
-                    <Rating defaultValue={item.rating} precision={0.5} readOnly />
-                  </CardFooter>
-                </Card>
+              {shirts.map((item, index) => (
+                <ShirtCard index={index} item={item} key={index} />
               ))}
             </div>
 
             <div style={{ width: "100%", display: "flex", justifyContent: "end", paddingRight: "5%", margin: "30px 0" }}>
-              <Pagination color="danger" showControls total={10} initialPage={1} />
+              {/* <PaginationBar totalPages={pagedResult["total-pages"]}/> */}
+              {shirts.length > 0 && (
+                <Pagination color="danger" page={searchParams.page ? +searchParams.page : 1} showControls total={pagedResult["total-pages"]} initialPage={1} />
+              )}
             </div>
           </div>
         </div>
