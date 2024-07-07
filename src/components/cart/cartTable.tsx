@@ -3,7 +3,9 @@
 import React, { useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
 import { Selection } from "@react-types/shared/src/selection";
-
+import { Button, Select, SelectItem } from '@nextui-org/react';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import ClientSelect from '@/components/ClientSelect';
 type Props = {
     cartInfo: OrderInCart;
 }
@@ -77,6 +79,17 @@ const shirtColumns = [
     }
 ];
 
+const paymentOptions = [
+    {
+        key: 'COD',
+        label: 'Thanh toán khi nhận hàng'
+    },
+    {
+        key: 'MOMO',
+        label: 'Thanh toán qua MOMO'
+    }
+];
+
 const CartTable = ({ cartInfo }: Props) => {
 
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
@@ -86,7 +99,7 @@ const CartTable = ({ cartInfo }: Props) => {
         shirt_name: od.shirt.name,
         size: od.size,
         quantity: od.quantity,
-        price: `${formatPrice(od.shirt['shirt-edition']['discount-price'])} VNĐ` ,
+        price: `${formatPrice(od.shirt['shirt-edition']['discount-price'])} VNĐ`,
         total: `${formatPrice(od.shirt['shirt-edition']['discount-price'] * od.quantity)} VNĐ`
     }));
 
@@ -115,25 +128,38 @@ const CartTable = ({ cartInfo }: Props) => {
     };
 
     return (
-        <Table
-            aria-label="Rows actions table example with dynamic content"
-            selectionMode="multiple"
-            selectionBehavior="toggle"
-            selectedKeys={selectedKeys}
-            className='max-w-[80%] my-0 mx-auto'
-            onSelectionChange={handleShirtsSelectionChange}
-        >
-            <TableHeader columns={shirtColumns}>
-                {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-            </TableHeader>
-            <TableBody items={shirtRows}>
-                {(item) => (
-                    <TableRow key={item.key}>
-                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
+        <>
+            <h1 className='text-center text-3xl font-bold mb-10'>Giỏ hàng của bạn <span className='text-red-600'>({cartInfo['order-details'].length} sản phẩm)</span></h1>
+            <Table
+                aria-label="Rows actions table example with dynamic content"
+                selectionMode="multiple"
+                selectionBehavior="toggle"
+                selectedKeys={selectedKeys}
+                className='max-w-[80%] my-0 mx-auto'
+                onSelectionChange={handleShirtsSelectionChange}
+            >
+                <TableHeader columns={shirtColumns}>
+                    {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                </TableHeader>
+                <TableBody items={shirtRows}>
+                    {(item) => (
+                        <TableRow key={item.key}>
+                            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+            <div className="payment_row max-w-[80%] my-0 mx-auto mt-5 flex justify-between">
+                <div className="flex gap-5 flex-col w-[30%] shadow-lg p-5 rounded-md">
+                    {/* <div className="">
+                        </div> */}
+                    <ClientSelect className='block' items={paymentOptions} label='Phương thức thanh toán' />
+                    {/* <div className="">Phí giao hàng: <span className='font-bold text-red-600 ml-2'> 10.000 VNĐ</span></div> */}
+                    <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(cartInfo.total)} VNĐ</span></div>
+                </div>
+                <Button type='button' className='bg-red-600 text-white' startContent={<CreditCardIcon />}>Thanh toán</Button>
+            </div>
+        </>
     );
 };
 
