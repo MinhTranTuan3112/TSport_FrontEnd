@@ -94,6 +94,10 @@ const CartTable = ({ cartInfo }: Props) => {
 
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
 
+    const [total, setTotal] = useState(0);
+
+    setTotal(cartInfo.total);
+
     const shirtRows = cartInfo['order-details'].map(od => ({
         key: od['shirt-id'].toString(),
         shirt_name: od.shirt.name,
@@ -155,7 +159,7 @@ const CartTable = ({ cartInfo }: Props) => {
                         </div> */}
                     <ClientSelect className='block' items={paymentOptions} label='Phương thức thanh toán' />
                     {/* <div className="">Phí giao hàng: <span className='font-bold text-red-600 ml-2'> 10.000 VNĐ</span></div> */}
-                    <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(cartInfo.total)} VNĐ</span></div>
+                    <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(total)} VNĐ</span></div>
                 </div>
                 <Button type='button' className='bg-red-600 text-white' startContent={<CreditCardIcon />}>Thanh toán</Button>
             </div>
