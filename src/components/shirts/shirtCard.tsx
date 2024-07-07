@@ -14,7 +14,7 @@ const ShirtCard = ({ item, index }: Props) => {
             <Card shadow="md" key={index} className="product-item">
                 <CardBody className=" p-0 product-img">
                     <Image className="img-fluid w-full" width={200} height={50} src={item.images[0].url} alt={item.name} />
-                    <Link href={"/detail"} style={{ height: "0" }}>
+                    <Link href={`/list/${item.id}`} style={{ height: "0" }}>
                         <div className="product-action">
                             <div className="btn btn-outline-dark btn-square" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <h3 style={{ margin: "0" }}>Chi tiết</h3>

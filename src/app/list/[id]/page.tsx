@@ -12,6 +12,7 @@ import OIPImage from '../../img/OIP.jpg';
 import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
 import { fetchShirtDetails } from '@/app/service/shirt_service';
 import { redirect } from 'next/navigation';
+import AddToCartContent from '../addToCartContent';
 
 type Props = {
     params: {
@@ -19,15 +20,16 @@ type Props = {
     }
 }
 
+
 const ShirtDetailsPage = async ({ params }: Props) => {
     if (params.id === undefined) {
-        redirect("/");   
-        return;
+        redirect("/");
     }
 
 
     const shirt: ShirtDetails = await fetchShirtDetails(params.id);
-    
+    console.log({ id: shirt.id });
+
 
     return (
         <div className="main-container">
@@ -48,54 +50,11 @@ const ShirtDetailsPage = async ({ params }: Props) => {
                             <span>(99 đánh giá)</span>
                         </div> */}
                         <h2 className='text-gray-400'><del>{shirt['shirt-edition']['stock-price']} VNĐ</del></h2>
-                        <h2 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem",
+                        <h2 style={{
+                            fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem",
                             color: 'red'
-                         }}>{shirt['shirt-edition']['discount-price']} VNĐ</h2>
-                        <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
-                            <span style={{ marginRight: "30px" }}>Kích thước:</span>
-                            {/* <RadioGroup row >
-                                    <FormControlLabel value="X" control={<Radio />} label="X" />
-                                    <FormControlLabel value="XL" control={<Radio />} label="XL" />
-                                    <FormControlLabel value="XXL" control={<Radio />} label="XXL" />
-                                </RadioGroup> */}
-                            <RadioGroup color="danger">
-                                <div className="flex flex-row gap-4">
-                                    <Radio value="X">X</Radio>
-                                    <Radio value="XL">XL</Radio>
-                                    <Radio value="SM">SM</Radio>
-                                </div>
-                            </RadioGroup>
-                        </div>
-                        {/* <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
-                            <span style={{ marginRight: "30px" }}>Màu sắc:</span>
-                        <RadioGroup row >
-                                    <FormControlLabel value="red" control={<Radio />} label="Đỏ" />
-                                    <FormControlLabel value="orange" control={<Radio />} label="Cam" />
-                                    <FormControlLabel value="yellow" control={<Radio />} label="Vàng" />
-                                </RadioGroup> 
-                            <RadioGroup color="danger">
-                                <div className="flex flex-row gap-4">
-                                    <Radio value="Đỏ">Đỏ</Radio>
-                                    <Radio value="Cam">Cam</Radio>
-                                    <Radio value="Vàng">Vàng</Radio>
-                                </div>
-                            </RadioGroup>
-                        </div> */}
-                        <div className="flex items-center gap-2">
-                            <Input type="number" label='Số lượng' className="w-1/3" />
-                            <Button type="button"
-                                className="text-white bg-red-600"
-                                startContent={<ShoppingCartIcon />}>Thêm vào giỏ hàng</Button>
-                            {/* <div>
-                                    <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><RemoveIcon /></Button>
-                                    <TextField style={{ height: "60px" }} />
-                                    <Button style={{ width: "60px", height: "60px", backgroundColor: "#f8d97b" }}><AddIcon /></Button>
-                                </div>
-                                <Button style={{ height: "60px", backgroundColor: "#f8d97b", marginLeft: "50px" }}>
-                                    <ShoppingCartIcon />
-                                    Thêm vào giỏ
-                                </Button> */}
-                        </div>
+                        }}>{shirt['shirt-edition']['discount-price']} VNĐ</h2>
+                        <AddToCartContent shirtId={shirt.id} />
                     </div>
                 </div>
             </div>

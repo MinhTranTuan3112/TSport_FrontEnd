@@ -31,7 +31,7 @@ const ShirtDetail = () => {
                                 <Rating defaultValue={2.5} precision={0.5} size="large" readOnly />
                                 <span>(99 đánh giá)</span>
                             </div>
-                            <h2 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem" }}>123.000 VNĐ</h2>
+
                             <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}>
                                 <span style={{ marginRight: "30px" }}>Kích thước:</span>
                                 {/* <RadioGroup row >
