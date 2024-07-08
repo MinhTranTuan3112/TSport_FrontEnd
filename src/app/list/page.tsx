@@ -9,11 +9,10 @@ import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortSelect from "../../components/shirts/sortSelect";
 import { fetchPagedShirts } from "../service/shirt_service";
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import ShirtCard from "@/components/shirts/shirtCard";
 
 import PaginationBar from "@/components/shirts/paginationBar";
-
 
 type Props = {
   searchParams: {
@@ -157,8 +156,8 @@ const ListShirt = async ({ searchParams }: Props) => {
                   label='Mùa giải'
                   color="danger"
                 >
-                  <Checkbox value="buenos-aires">EURO 2024</Checkbox>
-                  <Checkbox value="sydney">World Cup</Checkbox>
+                  <Checkbox value="1">EURO 2024</Checkbox>
+                  <Checkbox value="2">World Cup</Checkbox>
                 </CheckboxGroup>
               </div>
             </div>

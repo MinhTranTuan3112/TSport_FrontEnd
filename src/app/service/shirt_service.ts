@@ -1,5 +1,13 @@
-export const fetchPagedShirts = async (page: number = 1, pageSize: number = 10) => {
-    const response = await fetch(`http://localhost:8080/api/shirts?pageNumber=${page}&pageSize=${pageSize}`);
+export const fetchPagedShirts = async (page: number = 1, pageSize: number = 10, clubIds: number[] = []) => {
+    let url = `http://localhost:8080/api/shirts?pageNumber=${page}&pageSize=${pageSize}`;
+
+    if (clubIds.length > 0) {
+        clubIds.forEach((clubId) => {
+            url += `&clubIds=${clubId}`;
+        });
+    }
+
+    const response = await fetch(url);
     const data = await response.json();
     console.log(`Shirts data:`);
     console.log({ data });
