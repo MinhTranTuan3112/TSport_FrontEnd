@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
 import { Selection } from "@react-types/shared/src/selection";
 import { Button, Select, SelectItem } from '@nextui-org/react';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ClientSelect from '@/components/ClientSelect';
+import { formatPrice } from '@/utils/priceUtils';
 type Props = {
     cartInfo: OrderInCart;
 }
@@ -94,9 +95,9 @@ const CartTable = ({ cartInfo }: Props) => {
 
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
 
-    const [total, setTotal] = useState(0);
+    const [total, setTotal] = useState(cartInfo.total);
 
-    setTotal(cartInfo.total);
+    // setTotal(cartInfo.total);
 
     const shirtRows = cartInfo['order-details'].map(od => ({
         key: od['shirt-id'].toString(),
@@ -131,6 +132,18 @@ const CartTable = ({ cartInfo }: Props) => {
         }
     };
 
+    // // Use useEffect to watch for changes in selectedKeys and update the total accordingly
+    // useEffect(() => {
+    //     let newTotal = 0;
+    //     selectedKeys.forEach(key => {
+    //         const orderDetail = cartInfo['order-details'].find(od => od['shirt-id'].toString() === key);
+    //         if (orderDetail) {
+    //             newTotal += orderDetail.shirt['shirt-edition']['discount-price'] * orderDetail.quantity;
+    //         }
+    //     });
+    //     setTotal(newTotal);
+    // }, [selectedKeys]);
+
     return (
         <>
             <h1 className='text-center text-3xl font-bold mb-10'>Giỏ hàng của bạn <span className='text-red-600'>({cartInfo['order-details'].length} sản phẩm)</span></h1>
@@ -159,7 +172,7 @@ const CartTable = ({ cartInfo }: Props) => {
                         </div> */}
                     <ClientSelect className='block' items={paymentOptions} label='Phương thức thanh toán' />
                     {/* <div className="">Phí giao hàng: <span className='font-bold text-red-600 ml-2'> 10.000 VNĐ</span></div> */}
-                    <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(total)} VNĐ</span></div>
+                    <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(cartInfo.total)} VNĐ</span></div>
                 </div>
                 <Button type='button' className='bg-red-600 text-white' startContent={<CreditCardIcon />}>Thanh toán</Button>
             </div>

@@ -1,4 +1,4 @@
-function formatPrice(num: number): string {
+export function formatPrice(num: number): string {
     // Convert number to string and split into integer and decimal parts
     const [integerPart, decimalPart] = num.toString().split('.');
 
