@@ -23,7 +23,7 @@ const CartDetailsPage = async (props: Props) => {
         <>
             <div className="py-10">
                 {cartInfo['order-details'].length === 0 ? <h1 className='text-center text-3xl font-bold'>Giỏ hàng của bạn trống</h1>
-                    : <CartTable cartInfo={cartInfo} />
+                    : <CartTable accessToken={accessToken} cartInfo={cartInfo} />
                 }
             </div>
         </>

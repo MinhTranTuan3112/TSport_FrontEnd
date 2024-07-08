@@ -7,8 +7,11 @@ import { Button, Select, SelectItem } from '@nextui-org/react';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ClientSelect from '@/components/ClientSelect';
 import { formatPrice } from '@/utils/priceUtils';
+import Swal from 'sweetalert2';
+import { fetchConfirmOrder } from '@/app/service/order_service';
 type Props = {
     cartInfo: OrderInCart;
+    accessToken: string;
 }
 
 // const rows = [
@@ -91,13 +94,9 @@ const paymentOptions = [
     }
 ];
 
-const CartTable = ({ cartInfo }: Props) => {
+const CartTable = ({ cartInfo, accessToken }: Props) => {
 
     const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
-
-    const [total, setTotal] = useState(cartInfo.total);
-
-    // setTotal(cartInfo.total);
 
     const shirtRows = cartInfo['order-details'].map(od => ({
         key: od['shirt-id'].toString(),
@@ -129,6 +128,36 @@ const CartTable = ({ cartInfo }: Props) => {
             // Convert keys to Set<string> if it's not already
             const newKeys = new Set(Array.from(keys).map(String));
             setSelectedKeys(newKeys);
+        }
+    };
+
+    const handleConfirmOrderSubmission = async () => {
+        const result = await Swal.fire({
+            title: 'Xác nhận thanh toán',
+            confirmButtonText: 'Thanh toán',
+            showCancelButton: true,
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: 'red',
+            icon: 'question'
+        });
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        const response = await fetchConfirmOrder(accessToken, cartInfo.id, cartInfo['order-details'].map(od => ({
+            shirtId: od['shirt-id'],
+            quantity: od.quantity,
+            size: od.size // Assuming 'size' is a property. Adjust according to the actual structure.
+        })));
+
+        if (response?.ok) {
+            await Swal.fire({
+                icon: "success",
+                title: 'Đặt hàng thành công',
+                text: 'Cảm ơn bạn đã mua hàng tại cửa hàng TSport!',
+                confirmButtonText: 'OK',
+                confirmButtonColor: 'red'
+            });
         }
     };
 
@@ -174,7 +203,10 @@ const CartTable = ({ cartInfo }: Props) => {
                     {/* <div className="">Phí giao hàng: <span className='font-bold text-red-600 ml-2'> 10.000 VNĐ</span></div> */}
                     <div className="">Tổng cộng:<span className='font-bold text-red-600 ml-2'>{formatPrice(cartInfo.total)} VNĐ</span></div>
                 </div>
-                <Button type='button' className='bg-red-600 text-white' startContent={<CreditCardIcon />}>Thanh toán</Button>
+                <Button type='button' className='bg-red-600 text-white'
+                    onClick={handleConfirmOrderSubmission}
+                    startContent={<CreditCardIcon />}>
+                    Đặt hàng và thanh toán</Button>
             </div>
         </>
     );

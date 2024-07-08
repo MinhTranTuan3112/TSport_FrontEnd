@@ -11,16 +11,19 @@ import SortSelect from "../../components/shirts/sortSelect";
 import { fetchPagedShirts } from "../service/shirt_service";
 import { Suspense, useState } from 'react'
 import ShirtCard from "@/components/shirts/shirtCard";
-
 import PaginationBar from "@/components/shirts/paginationBar";
+import { fetchAllClubsFilter } from "../service/club_service";
+import ClubFilterContent from "./clubFilterContent";
 
 type Props = {
   searchParams: {
     page?: number;
     startPrice?: number;
     endPrice?: number;
+    clubIds?: number[];
   };
 };
+
 
 const ListShirt = async ({ searchParams }: Props) => {
   const list = [
@@ -122,7 +125,12 @@ const ListShirt = async ({ searchParams }: Props) => {
     },
   ];
 
-  const pagedResult: PagedResult<PagedShirt> = await fetchPagedShirts(searchParams.page ? + searchParams.page : 1, 10);
+  const pagedResult: PagedResult<PagedShirt> = await fetchPagedShirts(searchParams.page ? + searchParams.page : 1, 10,
+    searchParams.clubIds ? searchParams.clubIds : []
+  );
+
+  const clubs: ClubFilter[] = await fetchAllClubsFilter();
+
   const shirts = pagedResult.items;
 
   console.log({ pagedResult });
@@ -152,13 +160,7 @@ const ListShirt = async ({ searchParams }: Props) => {
                 {/* <FormGroup className="filter-control custom-checkbox">
                   <FormControlLabel control={<Checkbox defaultChecked />} label="Tất cả" />
                 </FormGroup> */}
-                <CheckboxGroup
-                  label='Mùa giải'
-                  color="danger"
-                >
-                  <Checkbox value="1">EURO 2024</Checkbox>
-                  <Checkbox value="2">World Cup</Checkbox>
-                </CheckboxGroup>
+                <ClubFilterContent clubs={clubs} searchParams={searchParams} />
               </div>
             </div>
             <div>

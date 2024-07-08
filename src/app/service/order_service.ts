@@ -53,11 +53,41 @@ export const fetchCartInfo = async (accessToken: string) => {
         console.log('Cart info');
         console.log({ data });
 
-
-
         return data;
     } catch (error) {
         console.error(`Error fetching cart info: ${error}`);
+        return null;
+    }
+};
+
+function convertToKebabCaseArray(requests: AddToCartRequest[]): string[] {
+    return requests.map(request => {
+        return `{
+    "shirt-id": ${request.shirtId},
+    "quantity": ${request.quantity},
+    "size": "${request.size}"
+}`;
+    });
+}
+
+export const fetchConfirmOrder = async (accessToken: string, orderId: number, requests: AddToCartRequest[]) => {
+    try {
+
+        const response = await customFetch({
+            options: {
+                method: 'POST'
+            },
+            endpointPath: `/orders/${orderId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: convertToKebabCaseArray(requests)
+        });
+
+        return response;
+    } catch (error) {
+        console.error(`Error in fetchConfirmOrder: ${error}`);
         return null;
     }
 };

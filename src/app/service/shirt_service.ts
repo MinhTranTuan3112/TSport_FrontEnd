@@ -3,10 +3,12 @@ export const fetchPagedShirts = async (page: number = 1, pageSize: number = 10, 
 
     if (clubIds.length > 0) {
         clubIds.forEach((clubId) => {
-            url += `&clubIds=${clubId}`;
+            url += `&clubId=${clubId}`;
         });
     }
 
+    console.log(`Fetching shirts from: ${url}`);    
+    
     const response = await fetch(url);
     const data = await response.json();
     console.log(`Shirts data:`);
