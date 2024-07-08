@@ -9,12 +9,14 @@ import Footer from "@/components/footer/footer";
 import "./detail.css";
 import OIPImage from '../../img/OIP.jpg';
 import { Button, Input, Radio, RadioGroup } from "@nextui-org/react";
-
+import MainNavBar from "@/components/MainNavBar";
+import { signout } from "../signin/actions";
 
 const ShirtDetail = () => {
     return (
         <>
             {/* <Header /> */}
+            <MainNavBar signout={signout} />
             <div className="main-container">
                 <nav className="breadcrumb" style={{ display: "flex" }}>
                     <Link href={"/"}><span >Home/ Áo đấu/ </span></Link>
@@ -128,6 +130,7 @@ const ShirtDetail = () => {
                 </div>
                 {/* <Footer /> */}
             </div>
+            <Footer/>
         </>
     )
 }

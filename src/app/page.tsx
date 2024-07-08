@@ -7,15 +7,18 @@ import Image from 'next/image';
 import "./home.css";
 import MainNavBar from '@/components/MainNavBar';
 import HomeContent from '@/components/home/homeContent';
+import { signout } from "./signin/actions";
 
 const home = () => {
     return (
         <>
             {/* <Header /> */}
             {/* <MainNavBar/> */}
+            <MainNavBar signout={signout} />
             <main className="main-container flex justify-center">
                 <HomeContent />
             </main>
+            <Footer/>
             {/* <div className="main-container">
                 <section className="discount">
                     <div className="container">

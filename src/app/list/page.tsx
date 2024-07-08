@@ -8,6 +8,10 @@ import Link from "next/link";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortSelect from "../../components/shirts/sortSelect";
+import Footer from "@/components/footer/footer";
+import MainNavBar from "@/components/MainNavBar";
+import { signout } from "../signin/actions";
+
 const ListShirt = () => {
   const list = [
     {
@@ -110,6 +114,7 @@ const ListShirt = () => {
   return (
     <>
       {/* <Header/> */}
+      <MainNavBar signout={signout} />
       <div className="main-container">
         {/* <Breadcrumbs className="breadcrumb" key="lg" size="lg">
                     <BreadcrumbItem><Link href={"/"}>Trang chủ</Link></BreadcrumbItem>
@@ -216,6 +221,7 @@ const ListShirt = () => {
         </div>
         {/* <Footer/> */}
       </div>
+      <Footer/>
     </>
   )
 }

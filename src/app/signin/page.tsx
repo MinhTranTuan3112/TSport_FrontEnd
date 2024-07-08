@@ -1,4 +1,4 @@
-'use client';
+'use server';
 import React from "react";
 import "./signin.css";
 import { Button, Input } from "@nextui-org/react";
@@ -11,11 +11,13 @@ import MainNavBar from "@/components/MainNavBar";
 import { signin } from "./actions";
 import SignInButton from "./signInButton";
 import MailIcon from '@mui/icons-material/Mail';
+import { signout } from "../signin/actions";
 
 const SignIn = () => {
   return (
     <>
       {/* <MainNavBar /> */}
+      <MainNavBar signout={signout} />
       <div className="main-container">
         <div className="container" style={{ height: "70vh" }}>
           <div className="login-container">
@@ -44,6 +46,7 @@ const SignIn = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };

@@ -4,6 +4,9 @@ import React from 'react'
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ClientSelect from '@/components/ClientSelect';
 import dynamic from 'next/dynamic';
+import MainNavBar from "@/components/MainNavBar";
+import { signout } from "../../signin/actions";
+import Footer from '@/components/footer/footer';
 type Props = {}
 
 const paymentOptions = [
@@ -22,6 +25,7 @@ const CartTable = dynamic( () => import('@/components/cart/cartTable'), { ssr: f
 const CartDetailsPage = (props: Props) => {
     return (
         <>
+        <MainNavBar signout={signout} />
             <div className="py-10">
                 <h1 className='text-center text-3xl font-bold mb-10'>Giỏ hàng của bạn <span className='text-red-600'>(4 sản phẩm)</span></h1>
                 <CartTable />
@@ -37,6 +41,7 @@ const CartDetailsPage = (props: Props) => {
                     <Button type='button' className='bg-red-600 text-white' startContent={<CreditCardIcon />}>Thanh toán</Button>
                 </div>
             </div>
+            <Footer/>
         </>
     );
 };
