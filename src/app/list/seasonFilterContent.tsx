@@ -1,16 +1,15 @@
 'use client';
 import { Checkbox, CheckboxGroup } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import React from 'react'
 
 type Props = {
-    clubs: ClubFilter[];
-    clubIds: number[];
-}
+    seasons: SeasonFilter[];
+    seasonIds: number[];
+};
 
-const ClubFilterContent = ({ clubs, clubIds }: Props) => {
-
+const SeasonFilterContent = ({ seasons, seasonIds }: Props) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -18,17 +17,22 @@ const ClubFilterContent = ({ clubs, clubIds }: Props) => {
         const sortColumn = searchParams.get('sortColumn') || 'id';
         const orderByDesc = searchParams.get('orderByDesc') || 'true';
         const playerIdsParam = searchParams.get('playerIds') || '';
+        const clubIdsParam = searchParams.get('clubIds') || '';
         const startPriceParam = searchParams.get('startPrice') || '';
         const endPriceParam = searchParams.get('endPrice') || '';
 
         let url = `/list?sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
-
+        
         if (value.length > 0) {
-            url += `&clubIds=${value.join(',')}`;
+           url += `&seasonIds=${value.join(',')}`;
         }
 
         if (playerIdsParam && playerIdsParam !== '') {
             url += `&playerIds=${playerIdsParam}`;
+        }
+
+        if (clubIdsParam && clubIdsParam !== '') {
+            url += `&clubIds=${clubIdsParam}`;
         }
 
         if (startPriceParam && startPriceParam !== '') {
@@ -42,20 +46,18 @@ const ClubFilterContent = ({ clubs, clubIds }: Props) => {
         router.push(url);
     };
 
+
     return (
         <div className="filter-section">
-            <CheckboxGroup
-                label='Câu lạc bộ'
-                color="danger"
-                onValueChange={handleCheck}
-            >
-                {clubs.map((club, index) => (
-                    <Checkbox value={club.id.toString()} key={index}
-                        checked={clubIds.includes(club.id)}>{club.name}</Checkbox>
+            <CheckboxGroup label='Mùa giải' color='danger'
+                onValueChange={handleCheck}>
+                {seasons.map((season, index) => (
+                    <Checkbox key={index} value={season.id.toString()}
+                        checked={seasonIds.includes(season.id)}>{season.name}</Checkbox>
                 ))}
             </CheckboxGroup>
         </div>
     );
 };
 
-export default ClubFilterContent;
+export default SeasonFilterContent;

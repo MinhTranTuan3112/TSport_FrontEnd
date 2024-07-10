@@ -1,215 +1,97 @@
 import "./shirtlist.css";
-import exGr from "../../img/OIP2.jpg";
-import { FormControlLabel, FormGroup, Rating, Select, MenuItem } from "@mui/material";
-import { Checkbox, checkboxGroup, Button, Card, CardBody, CardFooter, CheckboxGroup, Input, Pagination } from "@nextui-org/react";
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import Image from "next/image";
-import Link from "next/link";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
+import { Checkbox, checkboxGroup, Button, Card, CardBody, CardFooter, CheckboxGroup, Input, Pagination, Link } from "@nextui-org/react";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SortSelect from "../../components/shirts/sortSelect";
 import { fetchPagedShirts } from "../service/shirt_service";
-import { Suspense, useState } from 'react'
 import ShirtCard from "@/components/shirts/shirtCard";
-import PaginationBar from "@/components/shirts/paginationBar";
 import { fetchAllClubsFilter } from "../service/club_service";
 import ClubFilterContent from "./clubFilterContent";
+import PriceFilterContent from "./priceFilterContent";
+import { fetchAllSeasonsFilter } from "../service/season_service";
+import { fetchAllPlayersFilter } from "../service/player_service";
+import PlayerFilterContent from "./playerFilterContent";
+import SeasonFilterContent from "./seasonFilterContent";
 
 type Props = {
   searchParams: {
-    page?: number;
-    startPrice?: number;
-    endPrice?: number;
-    clubIds?: number[];
+    page?: string;
+    clubIds?: string;
+    playerIds?: string;
+    seasonIds?: string;
+    sortColumn?: string;
+    orderByDesc?: string;
+    startPrice?: string;
+    endPrice?: string;
   };
 };
 
 
 const ListShirt = async ({ searchParams }: Props) => {
-  const list = [
-    {
-      title: "Orange",
-      img: "../../img/OIP.jpg",
-      price: 5.50,
-      rating: 3,
-    },
-    {
-      title: "Tangerine",
-      img: "../../img/OIP.jpg",
-      price: 3.00,
-      rating: 4,
-    },
-    {
-      title: "Raspberry",
-      img: "../../img/OIP.jpg",
-      price: 10.00,
-      rating: 3.5,
-    },
-    {
-      title: "Lemon",
-      img: "../../img/OIP.jpg",
-      price: 5.30,
-      rating: 3,
-    },
-    {
-      title: "Avocado",
-      img: "../../img/OIP.jpg",
-      price: 15.70,
-      rating: 1,
-    },
-    {
-      title: "Lemon 2",
-      img: "../../img/OIP.jpg",
-      price: 8.00,
-      rating: 4.5,
-    },
-    {
-      title: "Banana",
-      img: "../../img/OIP.jpg",
-      price: 7.50,
-      rating: 2.5,
-    },
-    {
-      title: "Watermelon",
-      img: "../../img/OIP.jpg",
-      price: 12.20,
-      rating: 5,
-    },
-    {
-      title: "Orange",
-      img: "../../img/OIP.jpg",
-      price: 5.50,
-      rating: 3,
-    },
-    {
-      title: "Tangerine",
-      img: "../../img/OIP.jpg",
-      price: 3.00,
-      rating: 4,
-    },
-    {
-      title: "Raspberry",
-      img: "../../img/OIP.jpg",
-      price: 10.00,
-      rating: 3.5,
-    },
-    {
-      title: "Lemon",
-      img: "../../img/OIP.jpg",
-      price: 5.30,
-      rating: 3,
-    },
-    {
-      title: "Avocado",
-      img: "../../img/OIP.jpg",
-      price: 15.70,
-      rating: 1,
-    },
-    {
-      title: "Lemon 2",
-      img: "../../img/OIP.jpg",
-      price: 8.00,
-      rating: 4.5,
-    },
-    {
-      title: "Banana",
-      img: "../../img/OIP.jpg",
-      price: 7.50,
-      rating: 2.5,
-    },
-    {
-      title: "Watermelon",
-      img: "../../img/OIP.jpg",
-      price: 12.20,
-      rating: 5,
-    },
-  ];
 
-  const pagedResult: PagedResult<PagedShirt> = await fetchPagedShirts(searchParams.page ? + searchParams.page : 1, 10,
-    searchParams.clubIds ? searchParams.clubIds : []
+  const clubIds = searchParams.clubIds?.split(',').map(id => +id) || [];
+  const playerIds = searchParams.playerIds?.split(',').map(id => +id) || [];
+  const seasonIds = searchParams.seasonIds?.split(',').map(id => +id) || [];
+  const startPrice = searchParams.startPrice ? +searchParams.startPrice : null;
+  const endPrice = searchParams.endPrice ? +searchParams.endPrice : null;
+
+  const pagedResult: PagedResult<PagedShirt> = await fetchPagedShirts(
+    {
+      page: searchParams.page ? +searchParams.page : 1,
+      pageSize: 10,
+      clubIds: clubIds,
+      playerIds: playerIds,
+      seasonIds: seasonIds,
+      startPrice: startPrice,
+      endPrice: endPrice,
+      sortColumn: searchParams.sortColumn || 'id',
+      orderByDesc: searchParams.orderByDesc === 'true',
+    }
   );
 
   const clubs: ClubFilter[] = await fetchAllClubsFilter();
 
+  const players: PlayerFilter[] = await fetchAllPlayersFilter();
+
+  const seasons: SeasonFilter[] = await fetchAllSeasonsFilter();
+
   const shirts = pagedResult.items;
 
-  console.log({ pagedResult });
-
+  // console.log({ pagedResult });
 
   return (
     <>
       {/* <Header/> */}
       <div className="main-container">
-        {/* <Breadcrumbs className="breadcrumb" key="lg" size="lg">
-                    <BreadcrumbItem><Link href={"/"}>Trang chủ</Link></BreadcrumbItem>
-                    <BreadcrumbItem>Câu lạc bộ</BreadcrumbItem>
-                    <BreadcrumbItem>abc</BreadcrumbItem>
-                </Breadcrumbs> */}
-        {/* <nav className="breadcrumb" style={{ display: "flex" }}>
-          <Link href={"/"}><span >Trang chủ/ Câu lạc bộ/ </span></Link>
-          <span>Chi tiết áo đấu</span>
-        </nav> */}
         <div className="container-fluid-home mt-10" style={{ minHeight: "700px" }}>
           <div className="" style={{ width: "20%", paddingInline: "15px" }}>
             <h1 className="text-2xl font-bold mb-3">
               <FilterAltIcon className="text-2xl" /> Bộ lọc
             </h1>
-            <div>
-              {/* <h2>Mùa giải</h2> */}
-              <div className="filter-section">
-                {/* <FormGroup className="filter-control custom-checkbox">
-                  <FormControlLabel control={<Checkbox defaultChecked />} label="Tất cả" />
-                </FormGroup> */}
-                <ClubFilterContent clubs={clubs} searchParams={searchParams} />
-              </div>
-            </div>
-            <div>
-              {/* <h2>Cầu thủ</h2> */}
-              <div className="filter-section">
-                {/* <FormGroup className="filter-control custom-checkbox">
-                  <FormControlLabel control={<Checkbox defaultChecked />} label="Tất cả" />
-                  <FormControlLabel control={<Checkbox />} label="Minh" />
-                </FormGroup> */}
-                <CheckboxGroup
-                  label='Cầu thủ'
-                  color="danger"
-                >
-                  <Checkbox value="buenos-aires">Ronaldo</Checkbox>
-                  <Checkbox value="sydney">Messi</Checkbox>
-                </CheckboxGroup>
-              </div>
-            </div>
-            <div>
-              <h2>Giá</h2>
-              <div className="filter-section" style={{ display: "flex", alignItems: "center" }}>
-                <Input label="Từ" type="number" />
-                <ArrowRightAltIcon style={{ width: "10%" }} />
-                <Input label="Đến" type="number" />
-              </div>
+
+            <ClubFilterContent clubIds={clubIds} clubs={clubs} />
+            <PlayerFilterContent players={players} playerIds={playerIds} />
+            <SeasonFilterContent seasons={seasons} seasonIds={seasonIds} />
+            <PriceFilterContent initialStartPrice={startPrice ? +startPrice : 0}
+              initialEndPrice={endPrice ? +endPrice : 0} />
+            <br />
+            <div className="">
+              <Link href={'/list'} color="primary" className="mt-1">Xóa bộ lọc</Link>
             </div>
           </div>
           <div style={{ width: "80%", display: "flex", justifyContent: "left", alignItems: "start", flexWrap: "wrap" }}>
             <div style={{ width: "100%", display: "flex", justifyContent: "end", paddingRight: "5%", marginBottom: "10px" }}>
-              {/* <Select label="Tiêu chuẩn" style={{ width: "20%" }}>
-                <MenuItem value={""}>Bán chạy</MenuItem>
-                <MenuItem value={""}>Đánh giá</MenuItem>
-                <MenuItem value={""}>Mới nhất</MenuItem>
-              </Select> */}
-              <SortSelect />
-              {/* <Select
-                                label="Tiêu chuẩn"
-                                style={{width: "20%"}}
-                            >
-                                <SelectItem key={""}>Bán chạy</SelectItem>
-                            </Select> */}
+              <SortSelect initialSortColumn={searchParams.sortColumn || 'id'}
+                initialOrderByDesc={searchParams.orderByDesc === 'true'} />
             </div>
 
-            <div className="gap-4 grid sm:grid-cols-4 w-full">
-              {shirts.map((item, index) => (
-                <ShirtCard index={index} item={item} key={index} />
-              ))}
-            </div>
-
+            {
+              shirts.length === 0 ? (<div className="text-center w-full">Không tìm thấy sản phẩm nào.</div>) :
+                (<div className="gap-4 grid sm:grid-cols-4 w-full">
+                  {shirts.map((item, index) => (
+                    <ShirtCard index={index} item={item} key={index} />
+                  ))}
+                </div>
+                )}
             <div style={{ width: "100%", display: "flex", justifyContent: "end", paddingRight: "5%", margin: "30px 0" }}>
               {/* <PaginationBar totalPages={pagedResult["total-pages"]}/> */}
               {shirts.length > 0 && (
