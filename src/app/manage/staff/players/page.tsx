@@ -2,16 +2,16 @@
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { RenderCell } from "@/components/table/render-cell"
 import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React from 'react'
+import React, { useState } from 'react'
 import { faEdit, faRemove, faEye, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
 
 const players = () => {
-    const [isOpen, setIsOpen] = React.useState( false);
-    const [isEdit, setIsEdit] = React.useState( false);
-    const [isConfirm, setIsConfirm] = React.useState( false);
-    const [viewDetail, setViewDetail] = React.useState( false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
+    const [viewDetail, setViewDetail] = useState(false);
     const players = [
   {
     id: 1,
@@ -181,7 +181,7 @@ const players = () => {
                   <TableColumn className="text-2xl">Tên</TableColumn>
                   <TableColumn className="text-2xl">Câu lạc bộ</TableColumn>
                   <TableColumn className="text-2xl">Trạng thái</TableColumn>
-                  <TableColumn></TableColumn>
+                  <TableColumn children={undefined}></TableColumn>
                 </TableHeader>
                 {players.length == 0 ? (
                   <TableBody emptyContent={"No data to display."}>

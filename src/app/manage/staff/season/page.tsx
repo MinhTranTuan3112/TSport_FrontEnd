@@ -1,16 +1,16 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { Button, Chip, DatePicker, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React from 'react'
+import React, { useState } from 'react'
 import { faEdit, faRemove, faEye, faSoccerBall } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
 
 const seasons = () => {
-    const [isOpen, setIsOpen] = React.useState( false);
-    const [isEdit, setIsEdit] = React.useState( false);
-    const [isConfirm, setIsConfirm] = React.useState( false);
-    const [viewDetail, setViewDetail] = React.useState( false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
+    const [viewDetail, setViewDetail] = useState(false);
     const seasons = [
   {
     id: 1,
@@ -157,7 +157,7 @@ const seasons = () => {
                   <TableColumn className="text-2xl">Ngày bắt đầu</TableColumn>
                   <TableColumn className="text-2xl">Ngày kết thúc</TableColumn>
                   <TableColumn className="text-2xl">Trạng thái</TableColumn>
-                  <TableColumn></TableColumn>
+                  <TableColumn children={undefined}></TableColumn>
                 </TableHeader>
                 {seasons.length == 0 ? (
                   <TableBody emptyContent={"No data to display."}>

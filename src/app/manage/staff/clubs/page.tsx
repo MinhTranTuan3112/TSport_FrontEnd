@@ -1,16 +1,16 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React from 'react'
+import React, { useState } from 'react'
 import { faEdit, faRemove, faEye, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
 
 const clubs = () => {
-    const [isOpen, setIsOpen] = React.useState( false);
-    const [isEdit, setIsEdit] = React.useState( false);
-    const [isConfirm, setIsConfirm] = React.useState( false);
-    const [viewDetail, setViewDetail] = React.useState( false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isConfirm, setIsConfirm] = useState(false);
+    const [viewDetail, setViewDetail] = useState(false);
     const clubs = [
   {
     id: 1,
@@ -149,7 +149,7 @@ const clubs = () => {
                   <TableColumn className="text-2xl">Mã CLB</TableColumn>
                   <TableColumn className="text-2xl">Tên CLB</TableColumn>
                   <TableColumn className="text-2xl">Trạng thái</TableColumn>
-                  <TableColumn></TableColumn>
+                  <TableColumn children={undefined}></TableColumn>
                 </TableHeader>
                 {clubs.length == 0 ? (
                   <TableBody emptyContent={"No data to display."}>
