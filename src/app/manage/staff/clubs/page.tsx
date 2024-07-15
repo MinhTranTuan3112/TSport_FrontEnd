@@ -149,7 +149,7 @@ const ClubsSection = () => {
               <TableColumn className="text-2xl">Mã CLB</TableColumn>
               <TableColumn className="text-2xl">Tên CLB</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
-              <TableColumn children={undefined}></TableColumn>
+              {/* <TableColumn children={undefined}></TableColumn> */}
             </TableHeader>
             {clubs.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>

@@ -157,7 +157,7 @@ const SeasonsSection = () => {
               <TableColumn className="text-2xl">Ngày bắt đầu</TableColumn>
               <TableColumn className="text-2xl">Ngày kết thúc</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
-              <TableColumn children={undefined}></TableColumn>
+              {/* <TableColumn children={undefined}></TableColumn> */}
             </TableHeader>
             {seasons.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>
