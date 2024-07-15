@@ -176,7 +176,7 @@ const ShirtsSection = () => {
               <TableColumn className="text-2xl">Phiên bản</TableColumn>
               <TableColumn className="text-2xl">Cầu thủ</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
-              {/* <TableColumn children={undefined}></TableColumn> */}
+              <TableColumn className="text-2xl">...</TableColumn>
             </TableHeader>
             {shirts.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>

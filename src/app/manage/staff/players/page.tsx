@@ -181,7 +181,7 @@ const PlayersSection = () => {
               <TableColumn className="text-2xl">Tên</TableColumn>
               <TableColumn className="text-2xl">Câu lạc bộ</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
-              {/* <TableColumn children={undefined}></TableColumn> */}
+              <TableColumn className="text-2xl">...</TableColumn>
             </TableHeader>
             {players.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>
