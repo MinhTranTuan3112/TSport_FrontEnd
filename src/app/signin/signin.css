@@ -1,14 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;800&display=swap");
 
-.main-container {
-  padding-top: 105px;
-}
-
 .container {
   width: 90%;
   margin: 5%;
   max-width: 2000px !important;
-  min-height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;

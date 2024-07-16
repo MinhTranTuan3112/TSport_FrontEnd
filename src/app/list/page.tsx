@@ -11,6 +11,9 @@ import { fetchAllSeasonsFilter } from "../service/season_service";
 import { fetchAllPlayersFilter } from "../service/player_service";
 import PlayerFilterContent from "./playerFilterContent";
 import SeasonFilterContent from "./seasonFilterContent";
+import Footer from "@/components/footer/footer";
+import MainNavBar from "@/components/MainNavBar";
+import { signout } from "../signin/actions";
 
 type Props = {
   searchParams: {
@@ -61,6 +64,7 @@ const ListShirt = async ({ searchParams }: Props) => {
   return (
     <>
       {/* <Header/> */}
+      <MainNavBar signout={signout} />
       <div className="main-container">
         <div className="container-fluid-home mt-10" style={{ minHeight: "700px" }}>
           <div className="" style={{ width: "20%", paddingInline: "15px" }}>
@@ -102,6 +106,7 @@ const ListShirt = async ({ searchParams }: Props) => {
         </div>
         {/* <Footer/> */}
       </div>
+      <Footer/>
     </>
   )
 }

@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
-import { Content } from "@/components/home/content";
+import dynamic from "next/dynamic";
+
+const Content = dynamic(() => import("@/components/home/content"));
 
 const Home: NextPage = () => {
   return <Content />;

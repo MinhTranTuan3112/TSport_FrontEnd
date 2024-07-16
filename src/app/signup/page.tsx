@@ -10,12 +10,14 @@ import Header from "@/components/header/header";
 import MainNavBar from "@/components/MainNavBar";
 import { signin, signup } from "../signin/actions";
 import SignUpButton from "./signUpButton";
+import { signout } from "../signin/actions";
 
 const SignUp = () => {
   return (
     <>
       {/* <Header /> */}
       {/* <MainNavBar/> */}
+      <MainNavBar signout={signout} />
       <div className="main-container">
         <div className="container">
           <div className="register">
@@ -50,6 +52,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };
