@@ -268,7 +268,7 @@ const ShirtsSection = () => {
                   <ModalBody>
                     <div className="w-full flex items-center justify-center">
                       <p className="text-4xl">
-                        Xóa mẫu này ?
+                        Xóa mẫu áo đấu này ?
                       </p>
                     </div>
                   </ModalBody>

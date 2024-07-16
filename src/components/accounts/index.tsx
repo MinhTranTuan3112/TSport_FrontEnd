@@ -19,18 +19,18 @@ const Accounts = () => {
                 <li className="flex gap-2">
                     <HouseIcon />
                     <Link href={"/"}>
-                        <span>Home</span>
+                        <span>Trang chủ</span>
                     </Link>
                     <span> / </span>{" "}
                 </li>
 
                 <li className="flex gap-2">
                     <UsersIcon />
-                    <span>Users</span>
+                    <span>Khách hàng</span>
                     <span> / </span>{" "}
                 </li>
                 <li className="flex gap-2">
-                    <span>List</span>
+                    <span>Danh sách</span>
                 </li>
             </ul>
 
