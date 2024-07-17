@@ -37,7 +37,8 @@ export const SidebarWrapper = () => {
         })}
       >
         <div className={Sidebar.Header()}>
-          <CompaniesDropdown />
+          {/* <CompaniesDropdown /> */}
+          <p className="text-3xl">TSport</p>
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
@@ -110,7 +111,7 @@ export const SidebarWrapper = () => {
                               icon={faSoccerBall}
                               className="text-black-500"
                             />}
-                href="/manage/staff/season"
+                href="/manage/staff/seasons"
               />
               <SidebarItem
                 isActive={pathname === "/manage/staff/clubs"}

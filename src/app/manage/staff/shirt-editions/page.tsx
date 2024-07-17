@@ -1,73 +1,203 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
-import { RenderCell } from "@/components/table/render-cell"
-import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React, { useState } from 'react'
+import { Button, Checkbox, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure, useScrollShadow } from "@nextui-org/react"
+import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
+import { addEdition, fetchAllEditions, updateEdition } from "@/app/service/edition_service";
+import { fetchAllSeasonsFilter } from "@/app/service/season_service";
+import Swal from "sweetalert2";
 
 const EditionsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
-  const shirts = [
-    {
-      id: 1,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 2,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 3,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 4,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 5,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 6,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [search, setSearch] =useState("");
+  const [editions, setEditions] = useState([]);
+  const [seasons, setSeasons] = useState([]);
+  const [selectedEdition, setSelectedEdition] = useState(0);
+  const [code, setCode] = useState("");
+  const [size, setSize] = useState("");
+  const [sign, setSign] = useState("false");
+  const [stock, setStock] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [color, setColor] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [material, setMaterial] = useState("");
+  const [seasonId, setSeasonId] = useState("");
+  const [status, setStatus] = useState("");
+  const [err, setErr] = useState("");
+
+   useEffect(()=> {
+    fetchShirts()
+  },[])
+
+  useEffect(()=> {
+    fetchShirts()
+  },[page, search])
+
+  const fetchShirts = async () => {
+      try {
+        const response = await fetchAllEditions(page, search);
+        setEditions(response.items);
+        const resp = await fetchAllSeasonsFilter();
+        setSeasons(resp)
+      } catch (error) {
+        console.error("Error fetching editions",error);
+      }
+  }
+
+  const modalDetailOpen = (edition: EditionModel) => {
+    setViewDetail(true);
+    setCode(edition.code);
+    setSize(edition.size);
+    setSign(String(edition["has-signature"]));
+    setStock(edition["stock-price"]);
+    setDiscount(edition["discount-price"]);
+    setColor(edition.color);
+    setStatus(edition.status);
+    setOrigin(edition.origin);
+    setQuantity(edition.quantity);
+    setMaterial(edition.material);
+    setSeasonId(String(edition["season-id"]));
+  }
+
+  const modalEditOpen = (edition: EditionModel) => {
+    setIsEdit(true);
+    setIsOpen(true);
+    setSelectedEdition(edition.id)
+    setCode(edition.code);
+    setSize(edition.size);
+    setSign(String(edition["has-signature"]));
+    setStock(edition["stock-price"]);
+    setDiscount(edition["discount-price"]);
+    setColor(edition.color);
+    setStatus(edition.status);
+    setOrigin(edition.origin);
+    setQuantity(edition.quantity);
+    setMaterial(edition.material);
+    setSeasonId(String(edition["season-id"]));
+  }
+
+  const modalClose = () => {
+    setIsEdit(false);
+    setIsOpen(false);
+    setCode("");
+    setSize("");
+    setSign("false");
+    setStock(0);
+    setDiscount(0);
+    setColor("");
+    setStatus("");
+    setOrigin("");
+    setQuantity(0);
+    setMaterial("");
+    setSeasonId("");
+    setErr("");
+  }
+  
+  const handleAddEdition = async () => {
+    try {
+      if (code == ""){
+        setErr("Hãy nhập Mã sản phẩm");
+      } else
+      if (code.length > 5 || code.substring(0,2) != "SE"){
+        setErr("Mã sản phẩm có độ dài không quá 5 ký tự và có dạng SE***");
+      } else
+      if (size == ""){
+        setErr("Hãy nhập Kích thước");
+      } else
+      if (stock <= 0){
+        setErr("Giá gốc phải lớn hơn 0");
+      } else
+      if (discount <= 0){
+        setErr("Giá triết khấu phải lớn hơn 0");
+      } else
+      if (stock < discount){
+        setErr("Giá gốc phải lớn Giá triết khấu");
+      } else
+      if (color == ""){
+        setErr("Hãy nhập Màu sắc");
+      } else
+      if (origin == ""){
+        setErr("Hãy nhập Xuất xứ");
+      } else
+      if (quantity <= 0){
+        setErr("Số lượng phải lớn hơn 0");
+      } else
+      if (material == ""){
+        setErr("Hãy nhập Chất liệu");
+      } else
+      if (seasonId == ""){
+        setErr("Hãy chọn Mùa giải");
+      } else {
+        await addEdition(code, size, sign == "true", stock, discount, color, origin, quantity, material, Number(seasonId));
+        modalClose();
+        await Swal.fire({
+                title: 'Thêm mãu thành công!',
+                icon: 'success'
+            });
+            fetchShirts();
+      }
+        
+      } catch (error) {
+        console.error("Error add new edition",error);
+      }
+  }
+
+  const handleUpdateEdition = async () => {
+    try {
+      if (code == ""){
+        setErr("Hãy nhập Mã sản phẩm");
+      } else
+      if (code.length > 5 || code.substring(0,2) != "SE"){
+        setErr("Mã sản phẩm có độ dài không quá 5 ký tự và có dạng SE***");
+      } else
+      if (size == ""){
+        setErr("Hãy nhập Kích thước");
+      } else
+      if (stock <= 0){
+        setErr("Giá gốc phải lớn hơn 0");
+      } else
+      if (discount <= 0){
+        setErr("Giá triết khấu phải lớn hơn 0");
+      } else
+      if (stock < discount){
+        setErr("Giá gốc phải lớn Giá triết khấu");
+      } else
+      if (color == ""){
+        setErr("Hãy nhập Màu sắc");
+      } else
+      if (origin == ""){
+        setErr("Hãy nhập Xuất xứ");
+      } else
+      if (quantity <= 0){
+        setErr("Số lượng phải lớn hơn 0");
+      } else
+      if (material == ""){
+        setErr("Hãy nhập Chất liệu");
+      } else
+      if (seasonId == ""){
+        setErr("Hãy chọn Mùa giải");
+      } else {
+        await updateEdition(selectedEdition, code, size, sign == "true", stock, discount, color, origin, quantity, material, Number(seasonId));
+        modalClose();
+        await Swal.fire({
+                title: 'Sửa mãu thành công!',
+                icon: 'success'
+            });
+            fetchShirts();
+      }
+        
+      } catch (error) {
+        console.error("Error update edition",error);
+      }
+  }
+
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -104,6 +234,8 @@ const EditionsSection = () => {
               mainWrapper: "w-full",
             }}
             placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
@@ -122,39 +254,68 @@ const EditionsSection = () => {
                       {isEdit ? "Sửa áo đấu" : "Thêm áo đấu"}
                     </ModalHeader>
                     <ModalBody>
-                      <div className="flex flex-row">
-                        <div className="w-2/5">
-                          <Image
-                            isBlurred
-                            width={240}
-                            src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                            alt="NextUI Album Cover"
-                            className="m-5"
+                      <div className="flex flex-row justify-center">
+                        <div className="w-3/5">
+                          <Input label='Mã sản phẩm' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)}/>
+                          {/* <Checkbox checked={sign} onChange={(e) => setSign(e.target.checked)}>Có chữ ký</Checkbox> */}
+                          <Select
+                            label="Chữ ký"
+                            className="w-full p-2"
+                            defaultSelectedKeys={[sign]}
+                            onChange={(e) => setSign(e.target.value)}
+                          >
+                              <SelectItem key={"false"}>Không chữ ký</SelectItem>
+                              <SelectItem key={"true"}>Có chữ ký</SelectItem>
+                          </Select>
+                          <Input label='Kích thước' variant='bordered' className="w-full p-2" value={size} onChange={(e) => setSize(e.target.value)}/>
+                          <Input
+                            label="Giá gốc"
+                            variant="bordered"
+                            type="number"
+                            className="w-full p-2"
+                            value={stock.toString()}
+                            onChange={(e) => setStock(parseInt(e.target.value))}
                           />
                           <Input
-                            type="file"
-                            accept="image/*"
+                            label="Giá triết khấu"
+                            variant="bordered"
+                            type="number"
+                            className="w-full p-2"
+                            value={discount.toString()}
+                            onChange={(e) => setDiscount(parseInt(e.target.value))}
                           />
-                        </div>
-                        <div className="w-3/5">
-                          <Input label='Mã sản phẩm' variant='bordered' className="w-full p-2" />
-                          <Input label='Mô tả' variant='bordered' className="w-full p-2" />
+                          <Input label='Màu sắc' variant='bordered' className="w-full p-2" value={color} onChange={(e) => setColor(e.target.value)}/>
+                          <Input label='Xuất xứ' variant='bordered' className="w-full p-2" value={origin} onChange={(e) => setOrigin(e.target.value)}/>
                           <Input
                             label="Số lượng"
                             variant="bordered"
+                            type="number"
                             className="w-full p-2"
+                            value={quantity.toString()}
+                            onChange={(e) => setQuantity(parseInt(e.target.value))}
                           />
-                          <Input label='Phiên bản' variant='bordered' className="w-full p-2" />
-                          <Input label='Cầu thủ' variant='bordered' className="w-full p-2" />
-                          <Input label='Trạng thái' variant='bordered' className="w-full p-2" />
+                          <Input label='Chất liệu' variant='bordered' className="w-full p-2" value={material} onChange={(e) => setMaterial(e.target.value)}/>
+                          <Select
+                            label="Mùa giải"
+                            className="w-full p-2"
+                            defaultSelectedKeys={[seasonId]}
+                            onChange={(e) => setSeasonId(e.target.value)}
+                          >
+                            {seasons.map((season) => (
+                              <SelectItem key={String(season.id)}>{season.name}</SelectItem>
+                            ))}
+                          </Select>
+                          {err != "" && (
+                            <p className="text-2xl text-red-700 font-bold">{err}</p>
+                          )}
                         </div>
                       </div>
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="danger" variant="flat" onClick={onClose}>
+                      <Button color="danger" variant="flat" onClick={modalClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose}>
+                      <Button color="primary" onClick={isEdit ?  handleUpdateEdition : handleAddEdition}>
                         {isEdit ? "Lưu" : "Thêm"}
                       </Button>
                     </ModalFooter>
@@ -171,44 +332,44 @@ const EditionsSection = () => {
           <Table aria-label="Users Table">
             <TableHeader>
               <TableColumn className="text-2xl">Mã Sản phẩm</TableColumn>
-              <TableColumn className="text-2xl">Mô tả</TableColumn>
               <TableColumn className="text-2xl">Số lượng</TableColumn>
-              <TableColumn className="text-2xl">Phiên bản</TableColumn>
-              <TableColumn className="text-2xl">Cầu thủ</TableColumn>
+              <TableColumn className="text-2xl">Giá gốc</TableColumn>
+              <TableColumn className="text-2xl">Giá triết khấu</TableColumn>
+              <TableColumn className="text-2xl">Nguồn gốc</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
               <TableColumn className="text-2xl">...</TableColumn>
             </TableHeader>
-            {shirts.length == 0 ? (
+            {editions.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>
                 {[]}
               </TableBody>
             ) : (
               <TableBody>
-                {shirts.map((shirt, index) => (
+                {editions.map((shirt, index) => (
                   <TableRow key={index}>
                     <TableCell className="text-2xl">
-                      {shirt.id}
-                    </TableCell>
-                    <TableCell className="text-2xl">
-                      {shirt.description}
+                      {shirt.code}
                     </TableCell>
                     <TableCell className="text-2xl">
                       {shirt.quantity}
                     </TableCell>
                     <TableCell className="text-2xl">
-                      {shirt.version}
+                      {shirt["stock-price"]}
                     </TableCell>
                     <TableCell className="text-2xl">
-                      {shirt.player}
+                      {shirt["discount-price"]}
+                    </TableCell>
+                    <TableCell className="text-2xl">
+                      {shirt.origin}
                     </TableCell>
                     <TableCell className="text-2xl">
                       <Chip
                         size="md"
                         variant="flat"
                         color={
-                          shirt.status === "active"
+                          shirt.status === "Active"
                             ? "success"
-                            : shirt.status === "paused"
+                            : shirt.status === "Deleted"
                               ? "danger"
                               : "warning"
                         }
@@ -216,11 +377,11 @@ const EditionsSection = () => {
                         {shirt.status}
                       </Chip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="flex justify-center">
                       <Button
                         className="w-1/6 text-black"
                         aria-label="detail"
-                        onClick={() => setViewDetail(true)}
+                        onClick={() => modalDetailOpen(shirt)}
                       >
                         <FontAwesomeIcon
                           icon={faEye}
@@ -230,17 +391,16 @@ const EditionsSection = () => {
                       <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
-                        onClick={() => {
-                          setIsEdit(true);
-                          setIsOpen(true);
-                        }}
+                        onClick={() => modalEditOpen(shirt)}
                       >
                         <FontAwesomeIcon
                           icon={faEdit}
                           className="text-white-500"
                         />
                       </Button>
-                      <Button
+                      
+                      {shirt.status == "Active" && (
+                        <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
                         onClick={() => setIsConfirm(true)}
@@ -250,13 +410,14 @@ const EditionsSection = () => {
                           className="text-white-500"
                         />
                       </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={10} initialPage={1} />
+           <Pagination showControls total={editions.length / 10} initialPage={1} onChange={(newPage) => setPage(newPage)} />
 
           <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
             <ModalContent>
@@ -285,7 +446,7 @@ const EditionsSection = () => {
             </ModalContent>
           </Modal>
 
-          <Modal size="4xl" isOpen={viewDetail} onClose={() => setViewDetail(false)}>
+          <Modal size="3xl" isOpen={viewDetail} onClose={() => setViewDetail(false)}>
             <ModalContent>
               {(onClose) => (
                 <>
@@ -293,23 +454,32 @@ const EditionsSection = () => {
                     Chi tiết
                   </ModalHeader>
                   <ModalBody>
-                    <div className="flex flex-row">
-                      <div className="w-2/5 flex justify-center items-start">
-                        <Image
-                          isBlurred
-                          width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                          alt="NextUI Album Cover"
-                          className="m-5"
-                        />
+                    <div className="flex flex-row justify-center">
+                      <div className="w-1/4">
+                        <p className="w-full p-2 font-bold">Mã sản phẩm:</p>
+                        <p className="w-full p-2 font-bold">Có chữ ký:</p>
+                        <p className="w-full p-2 font-bold">Kích thước:</p>
+                        <p className="w-full p-2 font-bold">Giá gốc:</p>
+                        <p className="w-full p-2 font-bold">Giá triết khấu:</p>
+                        <p className="w-full p-2 font-bold">Màu sắc:</p>
+                        <p className="w-full p-2 font-bold">Xuất xứ:</p>
+                        <p className="w-full p-2 font-bold">Số lượng:</p>
+                        <p className="w-full p-2 font-bold">Chất liệu:</p>
+                        <p className="w-full p-2 font-bold">Mùa giải:</p>
+                        <p className="w-full p-2 font-bold">Trạng thái</p>
                       </div>
-                      <div className="w-3/5">
-                        <p className="w-full p-2">Mã sản phẩm</p>
-                        <p className="w-full p-2">Mô tả</p>
-                        <p className="w-full p-2">Số lượng</p>
-                        <p className="w-full p-2">Phiên bản</p>
-                        <p className="w-full p-2">Cầu thủ</p>
-                        <p className="w-full p-2">Trạng thái</p>
+                      <div className="w-1/4">
+                        <p className="w-full p-2">{code}</p>
+                        <p className="w-full p-2">{sign == "true" ? <Checkbox isDisabled defaultSelected></Checkbox> : <Checkbox isDisabled/>}</p>
+                        <p className="w-full p-2">{size}</p>
+                        <p className="w-full p-2">{stock}</p>
+                        <p className="w-full p-2">{discount}</p>
+                        <p className="w-full p-2">{color}</p>
+                        <p className="w-full p-2">{origin}</p>
+                        <p className="w-full p-2">{quantity}</p>
+                        <p className="w-full p-2">{material}</p>
+                        <p className="w-full p-2">{seasons.filter(season => String(season.id) === seasonId)[0].name}</p>
+                        <p className="w-full p-2">{status}</p>
                       </div>
                     </div>
                   </ModalBody>
