@@ -36,7 +36,7 @@ export const fetchPagedShirts = async ({ page = 1, pageSize = 10, clubIds = [],
 
     console.log(`Fetching shirts from: ${url}`);
 
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: 'no-store' });
     const data = await response.json();
     console.log(`Shirts data:`);
     console.log({ data });

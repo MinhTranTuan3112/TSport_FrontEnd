@@ -1,13 +1,15 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { RenderCell } from "@/components/table/render-cell"
-import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from "@nextui-org/react"
+import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from "@nextui-org/react"
 import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
 import { fetchPagedShirts, fetchShirts } from "@/app/service/shirt_service";
 import SaveButton from "./SaveButton";
+import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
+import { fetchShirtEditions } from "@/app/service/edition_service";
 
 const ShirtsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +19,9 @@ const ShirtsSection = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [pagedResult, setpagedResult] = useState<PagedResult<PagedShirt>>();
+  const [currentShirt, setCurrentShirt] = useState<PagedShirt>();
+  const [seasonPlayers, setSeasonPlayers] = useState<SeasonPlayerDetails[]>([]);
+  const [shirtEditions, setShirtEditions] = useState<ShirtEdition[]>([]);
 
   const [createImageSrc, setCreateImageSrc] = useState("https://nextui-docs-v2.vercel.app/images/album-cover.png");
   const handleCreateImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +37,7 @@ const ShirtsSection = () => {
       setCreateImageSrc("https://nextui-docs-v2.vercel.app/images/album-cover.png"); // Reset to default or placeholder if not an image
     }
   };
+
 
   const shirts = [
     {
@@ -91,6 +97,15 @@ const ShirtsSection = () => {
   ];
 
   useEffect(() => {
+
+    fetchSeasonPlayers().then(data => {
+      setSeasonPlayers(data);
+    });
+
+    fetchShirtEditions().then(data => {
+      setShirtEditions(data);
+    });
+
     const timer = setTimeout(() => {
       fetchShirts(page, 4, keyword).then(data => {
         setpagedResult(data);
@@ -169,7 +184,6 @@ const ShirtsSection = () => {
                             src={createImageSrc}
                             alt="..."
                             className="m-5"
-
                           />
                           <Input
                             onChange={handleCreateImageChange}
@@ -179,23 +193,48 @@ const ShirtsSection = () => {
                           />
                         </div>
                         <div className="w-3/5">
-                          <Input label='Mã áo' name="Code" variant='bordered' className="w-full p-2" />
-                          <Input label='Tên áo' name="Name" variant='bordered' className="w-full p-2" />
+                          <Input label='Mã áo' name="Code" variant='bordered' className="w-full p-2" required />
+                          <Input label='Tên áo' name="Name" variant='bordered' className="w-full p-2" required />
                           <Textarea
                             label="Mô tả áo"
                             placeholder="Nhập mô tả"
                             className="w-full p-2"
                             name="Description"
+                            required
                           />
                           <Input
                             label="Số lượng"
                             name="Quantity"
                             variant="bordered"
                             className="w-full p-2"
+                            required
                           />
-                          <Input label='Mã phiên bản' type="number" name="ShirtEditionId" variant='bordered' className="w-full p-2" />
-                          <Input label='Mã bộ mùa giải và cầu thủ' type="number" name="SeasonPlayerId" variant='bordered' className="w-full p-2" />
-                          {/* <Input label='Trạng thái' variant='bordered' className="w-full p-2" /> */}
+                          {/* <Input label='Mã phiên bản' type="number" name="ShirtEditionId" variant='bordered' className="w-full p-2" required/> */}
+                          {/* <Input label='Mã bộ mùa giải và cầu thủ' type="number" name="SeasonPlayerId" variant='bordered' className="w-full p-2" /> */}
+
+                          <Select label="Chọn phiên bản"
+                            className="w-full p-2"
+                            name="ShirtEditionId"
+                            required>
+                            {shirtEditions.map((shirtEdition) => (
+                              <SelectItem key={shirtEdition.id}>
+                                {`${shirtEdition.size} - ${shirtEdition.color}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
+
+                          <Select
+                            label="Chọn bộ mùa giải, cầu thủ, câu lạc bộ"
+                            className="w-full p-2"
+                            name="SeasonPlayerId"
+                            required
+                          >
+                            {seasonPlayers.map((seasonPlayer) => (
+                              <SelectItem key={seasonPlayer.id}>
+                                {`${seasonPlayer.season.name} - ${seasonPlayer.player.name} - ${seasonPlayer.season.club?.name}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
                         </div>
                       </div>
                     </ModalBody>
@@ -269,6 +308,7 @@ const ShirtsSection = () => {
                         onClick={() => setViewDetail(true)}
                       >
                         <FontAwesomeIcon
+                          onClick={() => setCurrentShirt(shirt)}
                           icon={faEye}
                           className="text-white-500"
                         />
