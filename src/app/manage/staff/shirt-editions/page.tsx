@@ -86,6 +86,7 @@ const EditionsSection = () => {
   const modalClose = () => {
     setIsEdit(false);
     setIsOpen(false);
+    setViewDetail(false);
     setCode("");
     setSize("");
     setSign("false");
@@ -446,7 +447,7 @@ const EditionsSection = () => {
             </ModalContent>
           </Modal>
 
-          <Modal size="3xl" isOpen={viewDetail} onClose={() => setViewDetail(false)}>
+          <Modal size="3xl" isOpen={viewDetail} onClose={() => modalClose}>
             <ModalContent>
               {(onClose) => (
                 <>
