@@ -95,3 +95,81 @@ export const fetchConfirmOrder = async (accessToken: string, orderId: number, re
         return null;
     }
 };
+
+export const fetchAllOrders = async (page: number, startDate: string, endDate: string) => {
+    let url = `/Orders?pageNumber=${page}&pageSize=10&sortColumn=created-date&orderByDesc=true`;
+    if (startDate != "") {
+        url += `&startDate=${startDate}`;
+    }
+    if (endDate != "") {
+        url += `&endDate=${endDate}`;
+    }
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'GET',
+            },
+            endpointPath: url,
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error(`Error fetching all orders: ${error}`);
+        return null;
+    }
+};
+
+export const fetchOrder = async (id: number) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'GET',
+            },
+            endpointPath: `/Orders/${id}`,
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error(`Error fetching order: ${error}`);
+        return null;
+    }
+};
+
+export const cancelOrder = async (id: number) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'PATCH',
+            },
+            endpointPath: `/Orders/${id}`,
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error cancel order: ${error}`);
+        return null;
+    }
+};

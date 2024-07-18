@@ -14,6 +14,7 @@ const SeasonsSection = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
   const [seasons, setSeasons] = useState([]);
   const [clubs, setClubs] = useState([]);
@@ -35,6 +36,7 @@ const SeasonsSection = () => {
       try {
         const response = await fetchAllSeasons(page, search);
         setSeasons(response.items);
+        setTotalPage(response["total-pages"])
         const resp = await fetchAllClubsFilter();
         setClubs(resp);
       } catch (error) {
@@ -240,7 +242,7 @@ const SeasonsSection = () => {
               <TableColumn className="text-2xl">Mã mùa giải</TableColumn>
               <TableColumn className="text-2xl">Tên mùa giải</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
-              <TableColumn className="text-2xl">...</TableColumn>
+              <TableColumn className="text-2xl text-center">...</TableColumn>
             </TableHeader>
             {seasons.length == 0 ? (
               <TableBody emptyContent={"No data to display."}>
@@ -300,7 +302,7 @@ const SeasonsSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={seasons.length / 10} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
 
           <Modal size="2xl" isOpen={isConfirm} onClose={() => {setIsConfirm(false); setSelectedSeason(0)}}>
             <ModalContent>

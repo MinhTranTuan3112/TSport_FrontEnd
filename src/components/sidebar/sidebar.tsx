@@ -19,7 +19,7 @@ import { FilterIcon } from "../icons/sidebar/filter-icon";
 import { useSidebarContext } from "../layout/layout-context";
 import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
-import { faSoccerBall, faPersonRunning, faPeopleGroup, faTShirt } from "@fortawesome/free-solid-svg-icons";
+import { faSoccerBall, faPersonRunning, faPeopleGroup, faTShirt, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const SidebarWrapper = () => {
@@ -65,12 +65,12 @@ export const SidebarWrapper = () => {
               isActive={pathname === "/manage/admin"}
               href="/manage/admin"
             />
-              <SidebarItem
+              {/* <SidebarItem
                 isActive={pathname === "/manage/admin/accounts"}
                 title="Khách hàng"
                 icon={<CustomersIcon />}
                 href="/manage/admin/accounts"
-              />
+              /> */}
               {/* <SidebarItem
                 isActive={pathname === "/products"}
                 title="Products"
@@ -101,6 +101,15 @@ export const SidebarWrapper = () => {
                               className="text-white-500"
                             />}
                 href="/manage/staff/shirt-editions"
+              />
+              <SidebarItem
+                isActive={pathname === "/manage/staff/view-orders"}
+                title="Đơn hàng"
+                icon={<FontAwesomeIcon
+                              icon={faShoppingCart}
+                              className="text-white-500"
+                            />}
+                href="/manage/staff/view-orders"
               />
               <Accordion>
       <AccordionItem key="1" title="ABCD" >

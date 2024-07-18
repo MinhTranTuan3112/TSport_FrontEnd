@@ -15,6 +15,7 @@ const EditionsSection = () => {
   const [isConfirm, setIsConfirm] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] =useState("");
   const [editions, setEditions] = useState([]);
   const [seasons, setSeasons] = useState([]);
@@ -44,6 +45,7 @@ const EditionsSection = () => {
       try {
         const response = await fetchAllEditions(page, search);
         setEditions(response.items);
+        setTotalPage(response["total-pages"]);
         const resp = await fetchAllSeasonsFilter();
         setSeasons(resp)
       } catch (error) {
@@ -418,7 +420,7 @@ const EditionsSection = () => {
               </TableBody>
             )}
           </Table>
-           <Pagination showControls total={editions.length / 10} initialPage={1} onChange={(newPage) => setPage(newPage)} />
+           <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)} />
 
           <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
             <ModalContent>
@@ -449,8 +451,6 @@ const EditionsSection = () => {
 
           <Modal size="3xl" isOpen={viewDetail} onClose={() => modalClose}>
             <ModalContent>
-              {(onClose) => (
-                <>
                   <ModalHeader className="flex flex-col gap-1">
                     Chi tiết
                   </ModalHeader>
@@ -479,18 +479,16 @@ const EditionsSection = () => {
                         <p className="w-full p-2">{origin}</p>
                         <p className="w-full p-2">{quantity}</p>
                         <p className="w-full p-2">{material}</p>
-                        <p className="w-full p-2">{seasons.filter(season => String(season.id) === seasonId)[0].name}</p>
+                        <p className="w-full p-2">{seasons.filter(season => String(season.id) === seasonId)[0]?.name}</p>
                         <p className="w-full p-2">{status}</p>
                       </div>
                     </div>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="success" onPress={onClose}>
+                    <Button color="success" onClick={modalClose}>
                       Đóng
                     </Button>
                   </ModalFooter>
-                </>
-              )}
             </ModalContent>
           </Modal>
         </div>

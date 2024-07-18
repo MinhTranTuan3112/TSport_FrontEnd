@@ -1,48 +1,70 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
+import { fetchAllClubs, removeClub } from "@/app/service/club_service";
+import Swal from "sweetalert2";
 
 const ClubsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
-  const [viewDetail, setViewDetail] = useState(false);
-  const clubs = [
-    {
-      id: 1,
-      name: "abc",
-      status: "status",
-    },
-    {
-      id: 2,
-      name: "abc",
-      status: "status",
-    },
-    {
-      id: 3,
-      name: "abc",
-      status: "status",
-    },
-    {
-      id: 4,
-      name: "abc",
-      status: "status",
-    },
-    {
-      id: 5,
-      name: "abc",
-      status: "status",
-    },
-    {
-      id: 6,
-      name: "abc",
-      status: "status",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [clubs, setClubs] = useState([]);
+
+  // const [code, setCode] = useState("");
+  // const [name, setName] = useState("");
+  // const [err, setErr] = useState("");
+  // const [selectedClub, setSelectedClub] = useState(0);
+  // const [status, setStatus] = useState("");
+
+useEffect(() => {
+    fetchClubs();
+  },[])
+  useEffect(() => {
+    fetchClubs();
+  },[search, page])
+
+  const fetchClubs = async () => {
+      try {
+        const response = await fetchAllClubs(page, search);
+        setClubs(response.items);
+        setTotalPage(response["total-pages"]);
+      } catch (error) {
+        console.error("Error fetching clubs",error);
+      }
+  }
+
+  // const modalClose = () => {
+  //   setIsOpen(false);
+  //   setIsEdit(false);
+  //   setSelectedClub(0);
+  //   setCode("");
+  //   setName("");
+  //   setStatus("");
+  //   setErr("");
+  // }
+
+  // const handleRemoveSeason = async () => {
+  //   try {
+  //       await removeClub(selectedClub);
+  //       setIsConfirm(false);
+  //       setSelectedClub(0);
+  //       await Swal.fire({
+  //               title: 'Xóa clb thành công!',
+  //               icon: 'success'
+  //           });
+  //           fetchClubs();
+  //     } catch (error) {
+  //       console.error("Error remove club",error);
+  //     }
+  // }
+
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -79,6 +101,8 @@ const ClubsSection = () => {
               mainWrapper: "w-full",
             }}
             placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
@@ -151,7 +175,7 @@ const ClubsSection = () => {
                 {clubs.map((club, index) => (
                   <TableRow key={index}>
                     <TableCell className="text-2xl">
-                      {club.id}
+                      {club.code}
                     </TableCell>
                     <TableCell className="text-2xl">
                       {club.name}
@@ -161,9 +185,9 @@ const ClubsSection = () => {
                         size="md"
                         variant="flat"
                         color={
-                          club.status === "active"
+                          club.status === "Active"
                             ? "success"
-                            : club.status === "paused"
+                            : club.status === "Deleted"
                               ? "danger"
                               : "warning"
                         }
@@ -172,16 +196,6 @@ const ClubsSection = () => {
                       </Chip>
                     </TableCell>
                     <TableCell>
-                      <Button
-                        className="w-1/6 text-black"
-                        aria-label="detail"
-                        onClick={() => setViewDetail(true)}
-                      >
-                        <FontAwesomeIcon
-                          icon={faEye}
-                          className="text-white-500"
-                        />
-                      </Button>
                       <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
@@ -198,7 +212,7 @@ const ClubsSection = () => {
                       <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
-                        onClick={() => setIsConfirm(true)}
+                        onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
                       >
                         <FontAwesomeIcon
                           icon={faRemove}
@@ -211,7 +225,7 @@ const ClubsSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={10} initialPage={1} />
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
 
           <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
             <ModalContent>
@@ -233,41 +247,6 @@ const ClubsSection = () => {
                     </Button>
                     <Button color="success" onPress={onClose}>
                       Có
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-
-          <Modal size="4xl" isOpen={viewDetail} onClose={() => setViewDetail(false)}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Chi tiết
-                  </ModalHeader>
-                  <ModalBody>
-                    <div className="flex flex-row">
-                      <div className="w-2/5 flex justify-center items-start">
-                        <Image
-                          isBlurred
-                          width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                          alt="NextUI Album Cover"
-                          className="m-5"
-                        />
-                      </div>
-                      <div className="w-3/5">
-                        <p className="w-full p-2">Mã CLB</p>
-                        <p className="w-full p-2">Tên CLB</p>
-                        <p className="w-full p-2">Trạng thái</p>
-                      </div>
-                    </div>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="success" onPress={onClose}>
-                      Đóng
                     </Button>
                   </ModalFooter>
                 </>

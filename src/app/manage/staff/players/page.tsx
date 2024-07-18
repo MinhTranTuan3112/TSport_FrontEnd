@@ -14,6 +14,7 @@ const PlayersSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedClubId, setSelectedClubId] = useState("");
   const [players, setPlayers] = useState([]);
@@ -38,6 +39,7 @@ const PlayersSection = () => {
     try {
         const response = await fetchAllPlayers(page, search, selectedClubId);
         setPlayers(response.items);
+        setTotalPage(response["total-pages"])
         const resp = await fetchAllClubsFilter();
         setClubs(resp);
       } catch (error) {
@@ -262,7 +264,8 @@ const handleUpdatePlayer = async () => {
                       {player.name}
                     </TableCell>
                     <TableCell className="text-2xl">
-                      {/*clubs.filter(club => club.id == player["club-id"])[0].name*/}
+                      {clubs.filter(club => club.id == player["club-id"])[0]?.name}
+                      {/* {player["club-id"]} */}
                     </TableCell>
                     <TableCell className="text-2xl">
                       <Chip
@@ -296,7 +299,7 @@ const handleUpdatePlayer = async () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={players.length / 10} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
         </div>
       </div>
     </div>
