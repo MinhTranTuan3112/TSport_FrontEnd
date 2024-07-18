@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchPagedShirts, fetchShirts } from "@/app/service/shirt_service";
+import { fetchPagedShirts, fetchShirtDetails, fetchShirts } from "@/app/service/shirt_service";
 import SaveButton from "./SaveButton";
 import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
 import { fetchShirtEditions } from "@/app/service/edition_service";
@@ -19,7 +19,8 @@ const ShirtsSection = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [pagedResult, setpagedResult] = useState<PagedResult<PagedShirt>>();
-  const [currentShirt, setCurrentShirt] = useState<PagedShirt>();
+  const [currentShirtId, setCurrentShirtId] = useState<number | undefined>();
+  const [currentShirt, setCurrentShirt] = useState<ShirtDetails>();
   const [seasonPlayers, setSeasonPlayers] = useState<SeasonPlayerDetails[]>([]);
   const [shirtEditions, setShirtEditions] = useState<ShirtEdition[]>([]);
 
@@ -116,6 +117,21 @@ const ShirtsSection = () => {
       clearTimeout(timer);
     }
   }, [page, keyword]);
+
+  useEffect(() => {
+
+    if (currentShirtId) {
+      fetchShirtDetails(currentShirtId ?? 0).then(data => {
+        setCurrentShirt(data);
+      });
+    }
+
+
+    return () => {
+
+    }
+  }, [currentShirtId]);
+
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -305,10 +321,12 @@ const ShirtsSection = () => {
                       <Button
                         className="w-1/6 text-black"
                         aria-label="detail"
-                        onClick={() => setViewDetail(true)}
+                        onClick={() => {
+                          setCurrentShirtId(shirt.id);
+                          setViewDetail(true);
+                        }}
                       >
                         <FontAwesomeIcon
-                          onClick={() => setCurrentShirt(shirt)}
                           icon={faEye}
                           className="text-white-500"
                         />
@@ -384,18 +402,20 @@ const ShirtsSection = () => {
                         <Image
                           isBlurred
                           width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
+                          src={currentShirt?.images?.[0]?.url ?? "https://nextui-docs-v2.vercel.app/images/album-cover.png"}
                           alt="NextUI Album Cover"
                           className="m-5"
                         />
                       </div>
                       <div className="w-3/5">
-                        <p className="w-full p-2">Mã sản phẩm</p>
-                        <p className="w-full p-2">Mô tả</p>
-                        <p className="w-full p-2">Số lượng</p>
-                        <p className="w-full p-2">Phiên bản</p>
-                        <p className="w-full p-2">Cầu thủ</p>
-                        <p className="w-full p-2">Trạng thái</p>
+                        <p className="w-full p-2">Mã sản phẩm: {currentShirt?.code}</p>
+                        <p className="w-full p-2">Tên áo: {currentShirt?.name}</p>
+                        <p className="w-full p-2">Mô tả: {currentShirt?.description}</p>
+                        <p className="w-full p-2">Số lượng: {currentShirt?.quantity}</p>
+                        <p className="w-full p-2">Phiên bản: {`${currentShirt?.["shirt-edition"].size} - ${currentShirt?.["shirt-edition"].color}`}</p>
+                        <p className="w-full p-2">Cầu thủ: {`${currentShirt?.["season-player"].player.name}`}</p>
+                        <p className="w-full p-2">Câu lạc bộ: {`${currentShirt?.["season-player"].season.club.name}`}</p>
+                        <p className="w-full p-2">Mùa giải: {`${currentShirt?.["season-player"].season.name}`}</p>
                       </div>
                     </div>
                   </ModalBody>
