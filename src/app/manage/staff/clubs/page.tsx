@@ -80,15 +80,6 @@ const ClubsSection = () => {
             }}
             placeholder="Search..."
           />
-          <Select
-            label="Mùa giải"
-            placeholder="Chọn mùa giải"
-            className="w-full p-4"
-          >
-            <SelectItem key={1}>A</SelectItem>
-            <SelectItem key={2}>B</SelectItem>
-            <SelectItem key={3}>C</SelectItem>
-          </Select>
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
           <div>

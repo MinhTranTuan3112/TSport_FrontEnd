@@ -2,60 +2,126 @@
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { RenderCell } from "@/components/table/render-cell"
 import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
+import { addNewPlayer, fetchAllPlayers, updatePlayer } from "@/app/service/player_service";
+import { fetchAllClubsFilter } from "@/app/service/club_service";
+import Swal from "sweetalert2";
 
 const PlayersSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isConfirm, setIsConfirm] = useState(false);
-  const [viewDetail, setViewDetail] = useState(false);
-  const players = [
-    {
-      id: 1,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-    {
-      id: 2,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-    {
-      id: 3,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-    {
-      id: 4,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-    {
-      id: 5,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-    {
-      id: 6,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      name: "newest",
-      club: "E",
-      status: "status",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [selectedClubId, setSelectedClubId] = useState("");
+  const [players, setPlayers] = useState([]);
+  const [clubs, setClubs] = useState([]);
+
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [clubId, setClubId] = useState("");
+  const [status, setStatus] = useState("");
+  const [selectedPlayer, setSelectedPlayer] = useState(0);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    fetchPlayers();
+  },[])
+
+  useEffect(() => {
+    fetchPlayers();
+  },[page, search, selectedClubId])
+
+  const fetchPlayers = async () => {
+    try {
+        const response = await fetchAllPlayers(page, search, selectedClubId);
+        setPlayers(response.items);
+        const resp = await fetchAllClubsFilter();
+        setClubs(resp);
+      } catch (error) {
+        console.error("Error fetching players",error);
+      }
+  }
+
+  const modalEditOpen = (player: PlayerModel) => {
+    setSelectedPlayer(player.id);
+    setIsOpen(true);
+    setIsEdit(true);
+    setCode(player.code);
+    setName(player.name);
+    setClubId(String(player["club-id"]));
+    setStatus(player.status);
+  }
+
+  const modalClose = () => {
+    setSelectedPlayer(0);
+    setIsOpen(false);
+    setIsEdit(false);
+    setCode("");
+    setName("");
+    setClubId("");
+    setStatus("");
+    setErr("");
+  }
+
+  const handleAddPlayer = async () => {
+    try {
+      if (code == ""){
+        setErr("Hãy nhập Mã cầu thủ");
+      } else
+      if (code.length > 6 || code.substring(0,3) != "PLY"){
+        setErr("Mã cầu thủ có dạng 'PLY***'");
+      } else
+      if (name == ""){
+        setErr("Hãy nhập Tên cầu thủ");
+      } else
+      if (clubId == ""){
+        setErr("Hãy chọn một Câu lạc bộ");
+      } else {
+        await addNewPlayer(code, name, Number(clubId));
+        modalClose();
+        await Swal.fire({
+                title: 'Thêm cầu thủ thành công!',
+                icon: 'success'
+            });
+            fetchPlayers();
+      }
+        
+      } catch (error) {
+        console.error("Error add new player",error);
+      }
+  }
+
+const handleUpdatePlayer = async () => {
+  try {
+      if (code == ""){
+        setErr("Hãy nhập Mã cầu thủ");
+      } else
+      if (code.length > 6 || code.substring(0,3) != "PLY"){
+        setErr("Mã cầu thủ có dạng 'PLY***'");
+      } else
+      if (name == ""){
+        setErr("Hãy nhập Tên cầu thủ");
+      } else
+      if (clubId == ""){
+        setErr("Hãy chọn một Câu lạc bộ");
+      } else {
+        await updatePlayer(selectedPlayer, code, name, Number(clubId), status);
+        modalClose();
+        await Swal.fire({
+                title: 'Chỉnh sửa cầu thủ thành công!',
+                icon: 'success'
+            });
+            fetchPlayers();
+      }
+        
+      } catch (error) {
+        console.error("Error update player",error);
+      }
+}
+
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -92,24 +158,19 @@ const PlayersSection = () => {
               mainWrapper: "w-full",
             }}
             placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-          <Select
-            label="Mùa giải"
-            placeholder="Chọn mùa giải"
-            className="w-full p-4"
-          >
-            <SelectItem key={1}>A</SelectItem>
-            <SelectItem key={2}>B</SelectItem>
-            <SelectItem key={3}>C</SelectItem>
-          </Select>
           <Select
             label="CLB"
             placeholder="Chọn CLB"
             className="w-full p-4"
+            defaultSelectedKeys={[selectedClubId]}
+            onChange={(e) => setSelectedClubId(e.target.value)}
           >
-            <SelectItem key={1}>D</SelectItem>
-            <SelectItem key={2}>E</SelectItem>
-            <SelectItem key={3}>F</SelectItem>
+            {clubs.map((club) => (
+              <SelectItem key={String(club.id)}>{club.name}</SelectItem>
+            ))}
           </Select>
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
@@ -128,40 +189,43 @@ const PlayersSection = () => {
                       {isEdit ? "Sửa thông tin" : "Thêm cầu thủ"}
                     </ModalHeader>
                     <ModalBody>
-                      <div className="flex flex-row">
-                        <div className="w-2/5">
-                          <Image
-                            isBlurred
-                            width={240}
-                            src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                            alt="NextUI Album Cover"
-                            className="m-5"
-                          />
-                          <Input
-                            type="file"
-                            accept="image/*"
-                          />
-                        </div>
+                      <div className="flex flex-row justify-center">
                         <div className="w-3/5">
-                          <Input label='Mã cầu thủ' variant='bordered' className="w-full p-2" />
-                          <Input label='Tên cầu thủ' variant='bordered' className="w-full p-2" />
+                          <Input label='Mã cầu thủ' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)}/>
+                          <Input label='Tên cầu thủ' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)}/>
                           <Select
-                            label="CLB"
-                            placeholder="Chọn CLB"
-                            className="w-full p-2"
-                          >
-                            <SelectItem key={1}>D</SelectItem>
-                            <SelectItem key={2}>E</SelectItem>
-                            <SelectItem key={3}>F</SelectItem>
-                          </Select>
+            label="CLB"
+            placeholder="Chọn CLB"
+            className="w-full p-4"
+            defaultSelectedKeys={[clubId]}
+            onChange={(e) => setClubId(e.target.value)}
+          >
+            {clubs.map((club) => (
+              <SelectItem key={String(club.id)}>{club.name}</SelectItem>
+            ))}
+          </Select>
+          {isEdit && (
+            <Select
+            label="Status"
+            className="w-full p-4"
+            defaultSelectedKeys={[status]}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+              <SelectItem key={"Active"}>Active</SelectItem>
+              <SelectItem key={"Deleted"}>Unactive</SelectItem>
+          </Select>
+          )}
+          {err != "" && (
+                            <p className="text-2xl text-red-700 font-bold">{err}</p>
+                          )}
                         </div>
                       </div>
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="danger" variant="flat" onClick={onClose}>
+                      <Button color="danger" variant="flat" onClick={modalClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose}>
+                      <Button color="primary" onClick={isEdit ? handleUpdatePlayer : handleAddPlayer}>
                         {isEdit ? "Lưu" : "Thêm"}
                       </Button>
                     </ModalFooter>
@@ -192,22 +256,22 @@ const PlayersSection = () => {
                 {players.map((player, index) => (
                   <TableRow key={index}>
                     <TableCell className="text-2xl">
-                      {player.id}
+                      {player.code}
                     </TableCell>
                     <TableCell className="text-2xl">
                       {player.name}
                     </TableCell>
                     <TableCell className="text-2xl">
-                      {player.club}
+                      {/*clubs.filter(club => club.id == player["club-id"])[0].name*/}
                     </TableCell>
                     <TableCell className="text-2xl">
                       <Chip
                         size="md"
                         variant="flat"
                         color={
-                          player.status === "active"
+                          player.status === "Active"
                             ? "success"
-                            : player.status === "paused"
+                            : player.status === "Deleted"
                               ? "danger"
                               : "warning"
                         }
@@ -217,35 +281,12 @@ const PlayersSection = () => {
                     </TableCell>
                     <TableCell>
                       <Button
-                        className="w-1/6 text-black"
-                        aria-label="detail"
-                        onClick={() => setViewDetail(true)}
-                      >
-                        <FontAwesomeIcon
-                          icon={faEye}
-                          className="text-white-500"
-                        />
-                      </Button>
-                      <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
-                        onClick={() => {
-                          setIsEdit(true);
-                          setIsOpen(true);
-                        }}
+                        onClick={() => modalEditOpen(player)}
                       >
                         <FontAwesomeIcon
                           icon={faEdit}
-                          className="text-white-500"
-                        />
-                      </Button>
-                      <Button
-                        className="w-1/6 bg-red-500 text-white"
-                        aria-label="remove"
-                        onClick={() => setIsConfirm(true)}
-                      >
-                        <FontAwesomeIcon
-                          icon={faRemove}
                           className="text-white-500"
                         />
                       </Button>
@@ -255,70 +296,7 @@ const PlayersSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={10} initialPage={1} />
-
-          <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Xác nhận
-                  </ModalHeader>
-                  <ModalBody>
-                    <div className="w-full flex items-center justify-center">
-                      <p className="text-4xl">
-                        Xóa cầu thủ này ?
-                      </p>
-                    </div>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Không
-                    </Button>
-                    <Button color="success" onPress={onClose}>
-                      Có
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-
-          <Modal size="4xl" isOpen={viewDetail} onClose={() => setViewDetail(false)}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Chi tiết
-                  </ModalHeader>
-                  <ModalBody>
-                    <div className="flex flex-row">
-                      <div className="w-2/5 flex justify-center items-start">
-                        <Image
-                          isBlurred
-                          width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                          alt="NextUI Album Cover"
-                          className="m-5"
-                        />
-                      </div>
-                      <div className="w-3/5">
-                        <p className="w-full p-2">Mã cầu thủ</p>
-                        <p className="w-full p-2">Tên</p>
-                        <p className="w-full p-2">CLB</p>
-                        <p className="w-full p-2">Trạng thái</p>
-                      </div>
-                    </div>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="success" onPress={onClose}>
-                      Đóng
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
+          <Pagination showControls total={players.length / 10} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
         </div>
       </div>
     </div>
