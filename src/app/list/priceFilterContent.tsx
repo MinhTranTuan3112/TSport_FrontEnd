@@ -33,7 +33,7 @@ const PriceFilterContent = ({initialStartPrice, initialEndPrice}: Props) => {
             return;
         }
 
-        let url = `/list?startPrice=${startPrice}&endPrice=${endPrice}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
+        let url = `/list?startPrice=${startPrice}&endPrice=${endPrice}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}&page=1`;
 
         if (clubIdsParam && clubIdsParam !== '') {
             url += `&clubIds=${clubIdsParam}`;

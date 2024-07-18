@@ -14,6 +14,7 @@ import SeasonFilterContent from "./seasonFilterContent";
 import Footer from "@/components/footer/footer";
 import MainNavBar from "@/components/MainNavBar";
 import { signout } from "../signin/actions";
+import CustomPaginationBar from "@/components/CustomPaginationBar";
 
 type Props = {
   searchParams: {
@@ -99,14 +100,15 @@ const ListShirt = async ({ searchParams }: Props) => {
             <div style={{ width: "100%", display: "flex", justifyContent: "end", paddingRight: "5%", margin: "30px 0" }}>
               {/* <PaginationBar totalPages={pagedResult["total-pages"]}/> */}
               {shirts.length > 0 && (
-                <Pagination color="danger" page={searchParams.page ? +searchParams.page : 1} showControls total={pagedResult["total-pages"]} initialPage={1} />
+                // <Pagination color="danger" page={searchParams.page ? +searchParams.page : 1} showControls total={pagedResult["total-pages"]} initialPage={1} />
+                <CustomPaginationBar page={searchParams.page ? +searchParams.page : 1} totalPages={pagedResult["total-pages"]} />
               )}
             </div>
           </div>
         </div>
         {/* <Footer/> */}
       </div>
-      <Footer/>
+      <Footer />
     </>
   )
 }

@@ -1,13 +1,15 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { RenderCell } from "@/components/table/render-cell"
-import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from "@nextui-org/react"
+import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from "@nextui-org/react"
 import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchPagedShirts, fetchShirts } from "@/app/service/shirt_service";
+import { fetchPagedShirts, fetchShirtDetails, fetchShirts } from "@/app/service/shirt_service";
 import SaveButton from "./SaveButton";
+import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
+import { fetchShirtEditions } from "@/app/service/edition_service";
 
 const ShirtsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +19,10 @@ const ShirtsSection = () => {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [pagedResult, setpagedResult] = useState<PagedResult<PagedShirt>>();
+  const [currentShirtId, setCurrentShirtId] = useState<number | undefined>();
+  const [currentShirt, setCurrentShirt] = useState<ShirtDetails>();
+  const [seasonPlayers, setSeasonPlayers] = useState<SeasonPlayerDetails[]>([]);
+  const [shirtEditions, setShirtEditions] = useState<ShirtEdition[]>([]);
 
   const [createImageSrc, setCreateImageSrc] = useState("https://nextui-docs-v2.vercel.app/images/album-cover.png");
   const handleCreateImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +38,7 @@ const ShirtsSection = () => {
       setCreateImageSrc("https://nextui-docs-v2.vercel.app/images/album-cover.png"); // Reset to default or placeholder if not an image
     }
   };
+
 
   const shirts = [
     {
@@ -91,6 +98,15 @@ const ShirtsSection = () => {
   ];
 
   useEffect(() => {
+
+    fetchSeasonPlayers().then(data => {
+      setSeasonPlayers(data);
+    });
+
+    fetchShirtEditions().then(data => {
+      setShirtEditions(data);
+    });
+
     const timer = setTimeout(() => {
       fetchShirts(page, 4, keyword).then(data => {
         setpagedResult(data);
@@ -101,6 +117,21 @@ const ShirtsSection = () => {
       clearTimeout(timer);
     }
   }, [page, keyword]);
+
+  useEffect(() => {
+
+    if (currentShirtId) {
+      fetchShirtDetails(currentShirtId ?? 0).then(data => {
+        setCurrentShirt(data);
+      });
+    }
+
+
+    return () => {
+
+    }
+  }, [currentShirtId]);
+
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -169,7 +200,6 @@ const ShirtsSection = () => {
                             src={createImageSrc}
                             alt="..."
                             className="m-5"
-
                           />
                           <Input
                             onChange={handleCreateImageChange}
@@ -179,23 +209,48 @@ const ShirtsSection = () => {
                           />
                         </div>
                         <div className="w-3/5">
-                          <Input label='Mã áo' name="Code" variant='bordered' className="w-full p-2" />
-                          <Input label='Tên áo' name="Name" variant='bordered' className="w-full p-2" />
+                          <Input label='Mã áo' name="Code" variant='bordered' className="w-full p-2" required />
+                          <Input label='Tên áo' name="Name" variant='bordered' className="w-full p-2" required />
                           <Textarea
                             label="Mô tả áo"
                             placeholder="Nhập mô tả"
                             className="w-full p-2"
                             name="Description"
+                            required
                           />
                           <Input
                             label="Số lượng"
                             name="Quantity"
                             variant="bordered"
                             className="w-full p-2"
+                            required
                           />
-                          <Input label='Mã phiên bản' type="number" name="ShirtEditionId" variant='bordered' className="w-full p-2" />
-                          <Input label='Mã bộ mùa giải và cầu thủ' type="number" name="SeasonPlayerId" variant='bordered' className="w-full p-2" />
-                          {/* <Input label='Trạng thái' variant='bordered' className="w-full p-2" /> */}
+                          {/* <Input label='Mã phiên bản' type="number" name="ShirtEditionId" variant='bordered' className="w-full p-2" required/> */}
+                          {/* <Input label='Mã bộ mùa giải và cầu thủ' type="number" name="SeasonPlayerId" variant='bordered' className="w-full p-2" /> */}
+
+                          <Select label="Chọn phiên bản"
+                            className="w-full p-2"
+                            name="ShirtEditionId"
+                            required>
+                            {shirtEditions.map((shirtEdition) => (
+                              <SelectItem key={shirtEdition.id}>
+                                {`${shirtEdition.size} - ${shirtEdition.color}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
+
+                          <Select
+                            label="Chọn bộ mùa giải, cầu thủ, câu lạc bộ"
+                            className="w-full p-2"
+                            name="SeasonPlayerId"
+                            required
+                          >
+                            {seasonPlayers.map((seasonPlayer) => (
+                              <SelectItem key={seasonPlayer.id}>
+                                {`${seasonPlayer.season.name} - ${seasonPlayer.player.name} - ${seasonPlayer.season.club?.name}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
                         </div>
                       </div>
                     </ModalBody>
@@ -266,7 +321,10 @@ const ShirtsSection = () => {
                       <Button
                         className="w-1/6 text-black"
                         aria-label="detail"
-                        onClick={() => setViewDetail(true)}
+                        onClick={() => {
+                          setCurrentShirtId(shirt.id);
+                          setViewDetail(true);
+                        }}
                       >
                         <FontAwesomeIcon
                           icon={faEye}
@@ -344,18 +402,20 @@ const ShirtsSection = () => {
                         <Image
                           isBlurred
                           width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
+                          src={currentShirt?.images?.[0]?.url ?? "https://nextui-docs-v2.vercel.app/images/album-cover.png"}
                           alt="NextUI Album Cover"
                           className="m-5"
                         />
                       </div>
                       <div className="w-3/5">
-                        <p className="w-full p-2">Mã sản phẩm</p>
-                        <p className="w-full p-2">Mô tả</p>
-                        <p className="w-full p-2">Số lượng</p>
-                        <p className="w-full p-2">Phiên bản</p>
-                        <p className="w-full p-2">Cầu thủ</p>
-                        <p className="w-full p-2">Trạng thái</p>
+                        <p className="w-full p-2">Mã sản phẩm: {currentShirt?.code}</p>
+                        <p className="w-full p-2">Tên áo: {currentShirt?.name}</p>
+                        <p className="w-full p-2">Mô tả: {currentShirt?.description}</p>
+                        <p className="w-full p-2">Số lượng: {currentShirt?.quantity}</p>
+                        <p className="w-full p-2">Phiên bản: {`${currentShirt?.["shirt-edition"].size} - ${currentShirt?.["shirt-edition"].color}`}</p>
+                        <p className="w-full p-2">Cầu thủ: {`${currentShirt?.["season-player"].player.name}`}</p>
+                        <p className="w-full p-2">Câu lạc bộ: {`${currentShirt?.["season-player"].season.club.name}`}</p>
+                        <p className="w-full p-2">Mùa giải: {`${currentShirt?.["season-player"].season.name}`}</p>
                       </div>
                     </div>
                   </ModalBody>
