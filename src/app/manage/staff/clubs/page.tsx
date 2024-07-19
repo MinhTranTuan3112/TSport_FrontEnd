@@ -15,7 +15,7 @@ const ClubsSection = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [clubs, setClubs] = useState<any[]>([]);
+  const [clubs, setClubs] = useState<PagedClub[]>([]);
 
   // const [code, setCode] = useState("");
   // const [name, setName] = useState("");
