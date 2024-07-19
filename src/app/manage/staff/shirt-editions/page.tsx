@@ -17,8 +17,8 @@ const EditionsSection = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] =useState("");
-  const [editions, setEditions] = useState([]);
-  const [seasons, setSeasons] = useState([]);
+  const [editions, setEditions] = useState<ShirtEdition[]>([]);
+  const [seasons, setSeasons] = useState<Season[]>([]);
   const [selectedEdition, setSelectedEdition] = useState(0);
   const [code, setCode] = useState("");
   const [size, setSize] = useState("");

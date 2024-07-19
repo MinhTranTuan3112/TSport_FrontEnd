@@ -27,21 +27,21 @@ const SeasonsSection = () => {
 
   useEffect(() => {
     fetchSeasons();
-  },[])
+  }, [])
   useEffect(() => {
     fetchSeasons();
-  },[search, page])
+  }, [search, page])
 
   const fetchSeasons = async () => {
-      try {
-        const response = await fetchAllSeasons(page, search);
-        setSeasons(response.items);
-        setTotalPage(response["total-pages"])
-        const resp = await fetchAllClubsFilter();
-        setClubs(resp);
-      } catch (error) {
-        console.error("Error fetching seasons",error);
-      }
+    try {
+      const response = await fetchAllSeasons(page, search);
+      setSeasons(response.items);
+      setTotalPage(response["total-pages"])
+      const resp = await fetchAllClubsFilter();
+      setClubs(resp);
+    } catch (error) {
+      console.error("Error fetching seasons", error);
+    }
   }
 
   const modalEditOpen = (season: SeasonModel) => {
@@ -67,73 +67,73 @@ const SeasonsSection = () => {
 
   const handleAddSeason = async () => {
     try {
-      if (code == ""){
+      if (code == "") {
         setErr("Hãy nhập Mã mùa giải");
       } else
-      if (code.length > 6 || code.substring(0,2) != "SES"){
-        setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
-      } else
-      if (name == ""){
-        setErr("Hãy nhập Tên mùa giải");
-      } else
-      if (clubId == ""){
-        setErr("Hãy chọn một Câu lạc bộ");
-      } else {
-        await addNewSeason(code, name, Number(clubId));
-        modalClose();
-        await Swal.fire({
+        if (code.length > 6 || code.substring(0, 2) != "SES") {
+          setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
+        } else
+          if (name == "") {
+            setErr("Hãy nhập Tên mùa giải");
+          } else
+            if (clubId == "") {
+              setErr("Hãy chọn một Câu lạc bộ");
+            } else {
+              await addNewSeason(code, name, Number(clubId));
+              modalClose();
+              await Swal.fire({
                 title: 'Thêm mùa giải thành công!',
                 icon: 'success'
-            });
-            fetchSeasons();
-      }
-        
-      } catch (error) {
-        console.error("Error add new season",error);
-      }
+              });
+              fetchSeasons();
+            }
+
+    } catch (error) {
+      console.error("Error add new season", error);
+    }
   }
 
   const handleEditSeason = async () => {
     try {
-      if (code == ""){
+      if (code == "") {
         setErr("Hãy nhập Mã mùa giải");
       } else
-      if (code.length > 6 || code.substring(0,2) != "SES"){
-        setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
-      } else
-      if (name == ""){
-        setErr("Hãy nhập Tên mùa giải");
-      } else
-      if (clubId == ""){
-        setErr("Hãy chọn một Câu lạc bộ");
-      } else {
-        await updateSeason(selectedSeason, code, name, Number(clubId), status);
-        modalClose();
-        await Swal.fire({
+        if (code.length > 6 || code.substring(0, 2) != "SES") {
+          setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
+        } else
+          if (name == "") {
+            setErr("Hãy nhập Tên mùa giải");
+          } else
+            if (clubId == "") {
+              setErr("Hãy chọn một Câu lạc bộ");
+            } else {
+              await updateSeason(selectedSeason, code, name, Number(clubId), status);
+              modalClose();
+              await Swal.fire({
                 title: 'Chỉnh sửa mùa giải thành công!',
                 icon: 'success'
-            });
-            fetchSeasons();
-      }
-        
-      } catch (error) {
-        console.error("Error update season",error);
-      }
+              });
+              fetchSeasons();
+            }
+
+    } catch (error) {
+      console.error("Error update season", error);
+    }
   }
 
   const handleRemoveSeason = async () => {
     try {
-        await removeSeason(selectedSeason);
-        setIsConfirm(false);
-        setSelectedSeason(0);
-        await Swal.fire({
-                title: 'Xóa mùa giải thành công!',
-                icon: 'success'
-            });
-            fetchSeasons();
-      } catch (error) {
-        console.error("Error remove season",error);
-      }
+      await removeSeason(selectedSeason);
+      setIsConfirm(false);
+      setSelectedSeason(0);
+      await Swal.fire({
+        title: 'Xóa mùa giải thành công!',
+        icon: 'success'
+      });
+      fetchSeasons();
+    } catch (error) {
+      console.error("Error remove season", error);
+    }
   }
 
   return (
@@ -186,49 +186,49 @@ const SeasonsSection = () => {
                 setIsEdit(false);
               }} placement='top-center' size="3xl">
               <ModalContent>
-                    <ModalHeader className='flex flex-col gap-1'>
-                      {isEdit ? "Sửa thông tin" : "Thêm mùa giải"}
-                    </ModalHeader>
-                    <ModalBody>
-                      <div className="flex flex-row justify-center">
-                        <div className="w-3/5">
-                          <Input label='Mã mùa giải' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)}/>
-                          <Input label='Tên mùa giải' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)}/>
-                          <Select
-                            label="CLB"
-                            className="w-full p-2"
-                            defaultSelectedKeys={[clubId]}
-                            onChange={(e) => setClubId(e.target.value)}
-                          >
-                            {clubs.map((club) => (
-                              <SelectItem key={String(club.id)}>{club.name}</SelectItem>
-                            ))}
-                          </Select>
-                          {isEdit && (
-                            <Select
-                            label="Status"
-                            className="w-full p-2"
-                            defaultSelectedKeys={[status]}
-                            onChange={(e) => setStatus(e.target.value)}
-                          >
-                              <SelectItem key={"Active"}>Active</SelectItem>
-                              <SelectItem key={"Deleted"}>Deleted</SelectItem>
-                          </Select>
-                          )}
-                          {err != "" && (
-                            <p className="text-2xl text-red-700 font-bold">{err}</p>
-                          )}
-                        </div>
-                      </div>
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button color="danger" variant="flat" onClick={modalClose}>
-                        Đóng
-                      </Button>
-                      <Button color="primary" onPress={isEdit ? handleEditSeason : handleAddSeason}>
-                        {isEdit ? "Lưu" : "Thêm"}
-                      </Button>
-                    </ModalFooter>
+                <ModalHeader className='flex flex-col gap-1'>
+                  {isEdit ? "Sửa thông tin" : "Thêm mùa giải"}
+                </ModalHeader>
+                <ModalBody>
+                  <div className="flex flex-row justify-center">
+                    <div className="w-3/5">
+                      <Input label='Mã mùa giải' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)} />
+                      <Input label='Tên mùa giải' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)} />
+                      <Select
+                        label="CLB"
+                        className="w-full p-2"
+                        defaultSelectedKeys={[clubId]}
+                        onChange={(e) => setClubId(e.target.value)}
+                      >
+                        {clubs.map((club) => (
+                          <SelectItem key={String(club.id)}>{club.name}</SelectItem>
+                        ))}
+                      </Select>
+                      {isEdit && (
+                        <Select
+                          label="Status"
+                          className="w-full p-2"
+                          defaultSelectedKeys={[status]}
+                          onChange={(e) => setStatus(e.target.value)}
+                        >
+                          <SelectItem key={"Active"}>Active</SelectItem>
+                          <SelectItem key={"Deleted"}>Deleted</SelectItem>
+                        </Select>
+                      )}
+                      {err != "" && (
+                        <p className="text-2xl text-red-700 font-bold">{err}</p>
+                      )}
+                    </div>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="flat" onClick={modalClose}>
+                    Đóng
+                  </Button>
+                  <Button color="primary" onPress={isEdit ? handleEditSeason : handleAddSeason}>
+                    {isEdit ? "Lưu" : "Thêm"}
+                  </Button>
+                </ModalFooter>
               </ModalContent>
             </Modal>
           </div>
@@ -286,15 +286,15 @@ const SeasonsSection = () => {
                       </Button>
                       {season.status == "Active" && (
                         <Button
-                        className="w-1/6 bg-red-500 text-white"
-                        aria-label="remove"
-                        onClick={() => {setIsConfirm(true); setSelectedSeason(season.id)}}
-                      >
-                        <FontAwesomeIcon
-                          icon={faRemove}
-                          className="text-white-500"
-                        />
-                      </Button>
+                          className="w-1/6 bg-red-500 text-white"
+                          aria-label="remove"
+                          onClick={() => { setIsConfirm(true); setSelectedSeason(season.id) }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faRemove}
+                            className="text-white-500"
+                          />
+                        </Button>
                       )}
                     </TableCell>
                   </TableRow>
@@ -302,9 +302,9 @@ const SeasonsSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)} />
 
-          <Modal size="2xl" isOpen={isConfirm} onClose={() => {setIsConfirm(false); setSelectedSeason(0)}}>
+          <Modal size="2xl" isOpen={isConfirm} onClose={() => { setIsConfirm(false); setSelectedSeason(0) }}>
             <ModalContent>
               {(onClose) => (
                 <>
