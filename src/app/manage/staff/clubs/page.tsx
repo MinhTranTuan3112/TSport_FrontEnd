@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchAllClubs, removeClub } from "@/app/service/club_service";
+import { fetchAllClubs } from "@/app/service/club_service";
 import Swal from "sweetalert2";
 
 const ClubsSection = () => {
@@ -15,7 +15,7 @@ const ClubsSection = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [clubs, setClubs] = useState([]);
+  const [clubs, setClubs] = useState<any[]>([]);
 
   // const [code, setCode] = useState("");
   // const [name, setName] = useState("");
@@ -212,7 +212,7 @@ useEffect(() => {
                       <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
-                        onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
+                        // onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
                       >
                         <FontAwesomeIcon
                           icon={faRemove}
