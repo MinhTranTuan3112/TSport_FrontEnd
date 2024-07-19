@@ -6,10 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchPagedShirts, fetchShirtDetails, fetchShirts } from "@/app/service/shirt_service";
+import { fetchPagedShirts, fetchShirtDetails, fetchShirts, removeShirt } from "@/app/service/shirt_service";
 import SaveButton from "./SaveButton";
 import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
 import { fetchShirtEditions } from "@/app/service/edition_service";
+import Swal from "sweetalert2";
 
 const ShirtsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,64 +39,6 @@ const ShirtsSection = () => {
       setCreateImageSrc("https://nextui-docs-v2.vercel.app/images/album-cover.png"); // Reset to default or placeholder if not an image
     }
   };
-
-
-  const shirts = [
-    {
-      id: 1,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 2,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 3,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 4,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 5,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-    {
-      id: 6,
-      img: "https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg",
-      description: "sp23",
-      quantity: 23,
-      version: "newest",
-      player: "Ronaldo",
-      status: "status",
-    },
-  ];
 
   useEffect(() => {
 
@@ -132,6 +75,22 @@ const ShirtsSection = () => {
     }
   }, [currentShirtId]);
 
+  const handleRemoveShirt = async () => {
+    try {
+      await removeShirt(currentShirtId);
+      setIsConfirm(false);
+      setCurrentShirtId(0);
+      await Swal.fire({
+        title: 'Xóa áo thành công!',
+        icon: 'success'
+      });
+      fetchShirts(page, 4, keyword).then(data => {
+        setpagedResult(data);
+      });
+    } catch (error) {
+      console.error("Error remove season", error);
+    }
+  }
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -331,7 +290,7 @@ const ShirtsSection = () => {
                           className="text-white-500"
                         />
                       </Button>
-                      <Button
+                      {/* <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
                         onClick={() => {
@@ -343,11 +302,11 @@ const ShirtsSection = () => {
                           icon={faEdit}
                           className="text-white-500"
                         />
-                      </Button>
+                      </Button> */}
                       <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
-                        onClick={() => setIsConfirm(true)}
+                        onClick={() => {setIsConfirm(true); setCurrentShirtId(shirt.id)}}
                       >
                         <FontAwesomeIcon
                           icon={faRemove}
@@ -362,7 +321,7 @@ const ShirtsSection = () => {
           </Table>
           <Pagination onChange={(newPage) => setPage(newPage)} showControls total={pagedResult?.["total-pages"] ?? 1} initialPage={page} />
 
-          <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
+          <Modal size="2xl" isOpen={isConfirm} onClose={() => {setIsConfirm(false); setCurrentShirtId(0)}}>
             <ModalContent>
               {(onClose) => (
                 <>
@@ -380,7 +339,7 @@ const ShirtsSection = () => {
                     <Button color="danger" variant="light" onPress={onClose}>
                       Không
                     </Button>
-                    <Button color="success" onPress={onClose}>
+                    <Button color="success" onPress={handleRemoveShirt}>
                       Có
                     </Button>
                   </ModalFooter>

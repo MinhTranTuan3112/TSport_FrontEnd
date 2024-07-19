@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchAllClubs } from "@/app/service/club_service";
+import { addNewClub, fetchAllClubs, removeClubs, updateClub } from "@/app/service/club_service";
 import Swal from "sweetalert2";
 
 const ClubsSection = () => {
@@ -17,11 +17,11 @@ const ClubsSection = () => {
   const [search, setSearch] = useState("");
   const [clubs, setClubs] = useState<PagedClub[]>([]);
 
-  // const [code, setCode] = useState("");
-  // const [name, setName] = useState("");
-  // const [err, setErr] = useState("");
-  // const [selectedClub, setSelectedClub] = useState(0);
-  // const [status, setStatus] = useState("");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [err, setErr] = useState("");
+  const [selectedClub, setSelectedClub] = useState(0);
+  const [status, setStatus] = useState("Active");
 
 useEffect(() => {
     fetchClubs();
@@ -40,30 +40,82 @@ useEffect(() => {
       }
   }
 
-  // const modalClose = () => {
-  //   setIsOpen(false);
-  //   setIsEdit(false);
-  //   setSelectedClub(0);
-  //   setCode("");
-  //   setName("");
-  //   setStatus("");
-  //   setErr("");
-  // }
+  const modalClose = () => {
+    setIsOpen(false);
+    setIsEdit(false);
+    setSelectedClub(0);
+    setCode("");
+    setName("");
+    setStatus("Active");
+    setErr("");
+  }
 
-  // const handleRemoveSeason = async () => {
+  const handleCreateClub = async () => {
+    try {
+      if (code == "") {
+        setErr("Hãy nhập Mã CLB");
+      } else
+        if (code.length > 6 || code.substring(0, 3) != "CLB") {
+          setErr("Mã câu lạc bộ có dạng 'CLB***'");
+        } else
+          if (name == "") {
+            setErr("Hãy nhập Tên câu lạc bộ");
+          } else if (clubs.filter(club => club.code === code).length > 0) {
+            setErr("Mã câu lạc bộ đã tồn tại");
+          }else
+        {
+          await addNewClub(code, name, status);
+        modalClose();
+        await Swal.fire({
+                title: 'Thêm clb thành công!',
+                icon: 'success'
+            });
+            fetchClubs();
+        }
+      } catch (error) {
+        console.error("Error create club",error);
+      }
+  }
+
+  // const handleUpdateClub = async () => {
   //   try {
-  //       await removeClub(selectedClub);
-  //       setIsConfirm(false);
-  //       setSelectedClub(0);
+  //     if (code == "") {
+  //       setErr("Hãy nhập Mã CLB");
+  //     } else
+  //       if (code.length > 6 || code.substring(0, 3) != "CLB") {
+  //         setErr("Mã câu lạc bộ có dạng 'CLB***'");
+  //       } else
+  //         if (name == "") {
+  //           setErr("Hãy nhập Tên câu lạc bộ");
+  //         } else
+  //       {
+  //         await updateClub(selectedClub, code, name, status);
+  //       modalClose();
   //       await Swal.fire({
-  //               title: 'Xóa clb thành công!',
+  //               title: 'Sửa clb thành công!',
   //               icon: 'success'
   //           });
   //           fetchClubs();
+  //       }
   //     } catch (error) {
-  //       console.error("Error remove club",error);
+  //       console.error("Error create club",error);
   //     }
   // }
+
+  const handleRemoveClub = async () => {
+    try {
+        await removeClubs(selectedClub);
+        setIsConfirm(false);
+        setSelectedClub(0);
+        await Swal.fire({
+                title: 'Xóa clb thành công!',
+                icon: 'success'
+            });
+            fetchClubs();
+      } catch (error) {
+        console.error("Error remove club",error);
+      }
+  }
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -113,7 +165,8 @@ useEffect(() => {
               onClose={() => {
                 setIsOpen(false);
                 setIsEdit(false);
-              }} placement='top-center' size="4xl">
+                setErr("");
+              }} placement='top-center' size="2xl">
               <ModalContent>
                 {(onClose) => (
                   <>
@@ -121,8 +174,8 @@ useEffect(() => {
                       {isEdit ? "Sửa thông tin" : "Thêm CLB"}
                     </ModalHeader>
                     <ModalBody>
-                      <div className="flex flex-row">
-                        <div className="w-2/5">
+                      <div className="flex flex-row justify-center">
+                        {/* <div className="w-2/5">
                           <Image
                             isBlurred
                             width={240}
@@ -134,18 +187,30 @@ useEffect(() => {
                             type="file"
                             accept="image/*"
                           />
-                        </div>
+                        </div> */}
                         <div className="w-3/5">
-                          <Input label='Mã CLB' variant='bordered' className="w-full p-2" />
-                          <Input label='Tên CLB' variant='bordered' className="w-full p-2" />
+                          <Input label='Mã CLB' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)}/>
+                          <Input label='Tên CLB' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)}/>
+                          <Select
+                          label="Status"
+                          className="w-full p-2"
+                          defaultSelectedKeys={[status]}
+                          onChange={(e) => setStatus(e.target.value)}
+                        >
+                          <SelectItem key={"Active"}>Active</SelectItem>
+                          <SelectItem key={"Unactive"}>Unactive</SelectItem>
+                        </Select>
+                          {err != "" && (
+                        <p className="text-2xl text-red-700 font-bold">{err}</p>
+                      )}
                         </div>
                       </div>
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="danger" variant="flat" onClick={onClose}>
+                      <Button color="danger" variant="flat" onClick={modalClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose}>
+                      <Button color="primary" onPress={handleCreateClub}>
                         {isEdit ? "Lưu" : "Thêm"}
                       </Button>
                     </ModalFooter>
@@ -196,29 +261,35 @@ useEffect(() => {
                       </Chip>
                     </TableCell>
                     <TableCell>
-                      <Button
+                      {/* <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
                         onClick={() => {
                           setIsEdit(true);
                           setIsOpen(true);
+                          setSelectedClub(club.id);
+                          setCode(club.code);
+                          setName(club.name);
+                          setStatus(club.status);
                         }}
                       >
                         <FontAwesomeIcon
                           icon={faEdit}
                           className="text-white-500"
                         />
-                      </Button>
-                      <Button
+                      </Button> */}
+                      {club.status == "Active" && (
+                        <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
-                        // onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
+                        onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
                       >
                         <FontAwesomeIcon
                           icon={faRemove}
                           className="text-white-500"
                         />
                       </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -245,7 +316,7 @@ useEffect(() => {
                     <Button color="danger" variant="light" onPress={onClose}>
                       Không
                     </Button>
-                    <Button color="success" onPress={onClose}>
+                    <Button color="success" onPress={handleRemoveClub}>
                       Có
                     </Button>
                   </ModalFooter>

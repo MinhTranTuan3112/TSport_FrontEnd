@@ -1,3 +1,6 @@
+import { customFetch } from "@/utils/fetch/customFetch";
+import { createClient } from "@/utils/supabase/client";
+
 export const fetchPagedShirts = async ({ page = 1, pageSize = 10, clubIds = [],
     playerIds = [],
     seasonIds = [],
@@ -6,7 +9,7 @@ export const fetchPagedShirts = async ({ page = 1, pageSize = 10, clubIds = [],
     sortColumn = 'id',
     orderByDesc = true
 }: QueryPagedShirtRequest) => {
-    let url = `http://localhost:8080/api/shirts?pageNumber=${page}&pageSize=${pageSize}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
+    let url = `https://tsportapi.azurewebsites.net/api/shirts?pageNumber=${page}&pageSize=${pageSize}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
 
     if (clubIds.length > 0) {
         clubIds.forEach((clubId) => {
@@ -52,7 +55,7 @@ export const fetchShirts = async (page = 1, pageSize = 10,
     endPrice = null,
     sortColumn = 'id',
     orderByDesc = true) => {
-    let url = `http://localhost:8080/api/shirts?pageNumber=${page}&pageSize=${pageSize}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
+    let url = `https://tsportapi.azurewebsites.net/api/shirts?pageNumber=${page}&pageSize=${pageSize}&sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
 
     if (name != '') {
         url += `&name=${name}`;
@@ -94,7 +97,7 @@ export const fetchShirts = async (page = 1, pageSize = 10,
 }
 
 export const fetchShirtDetails = async (id: number) => {
-    const response = await fetch(`http://localhost:8080/api/shirts/${id}`);
+    const response = await fetch(`https://tsportapi.azurewebsites.net/api/shirts/${id}`);
     const data = await response.json();
     console.log(`Shirt details:`);
     console.log({ data });
@@ -113,7 +116,7 @@ export const fetchCreateShirt = async (request: CreateShirtRequest, accessToken:
         newFormData.append('shirtEditionId', request.shirtEditionId.toString());
         newFormData.append('seasonPlayerId', request.seasonPlayerId.toString());
 
-        const response = await fetch('http://localhost:8080/api/shirts', {
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/shirts', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -130,5 +133,27 @@ export const fetchCreateShirt = async (request: CreateShirtRequest, accessToken:
 
     } catch (error) {
         console.error(`Error creating shirt: ${error}`);
+    }
+};
+
+export const removeShirt = async (id: number | undefined) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'DELETE',
+            },
+            endpointPath: `/shirts/${id}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error remove shirt: ${error}`);
+        return null;
     }
 };
