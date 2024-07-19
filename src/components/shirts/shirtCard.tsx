@@ -1,3 +1,4 @@
+import { formatPrice } from "@/utils/priceUtils";
 import { Button, Card, CardBody, CardFooter, Image, Link } from "@nextui-org/react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -29,8 +30,8 @@ const ShirtCard = ({ item, index }: Props) => {
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "1rem"
                     }}>
-                        <h5 style={{ margin: "0" }} className="font-bold">{item["shirt-edition"]["discount-price"] * 80 / 100} VNĐ</h5>
-                        <h6 className="text-muted"><del>{item["shirt-edition"]["stock-price"]} VNĐ</del></h6>
+                        <h5 style={{ margin: "0" }} className="font-bold text-red-600">{formatPrice(item["shirt-edition"]["discount-price"])} VNĐ</h5>
+                        <h6 className="text-muted"><del>{formatPrice(item["shirt-edition"]["stock-price"])} VNĐ</del></h6>
                     </div>
                     <Link href={`/list/${item.id}`} color="danger">Chi tiết</Link>
                     {/* <Rating defaultValue={item.rating} precision={0.5} readOnly /> */}

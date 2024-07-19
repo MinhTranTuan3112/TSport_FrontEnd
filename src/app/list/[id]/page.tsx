@@ -15,6 +15,7 @@ import { redirect } from 'next/navigation';
 import AddToCartContent from '../addToCartContent';
 import MainNavBar from '@/components/MainNavBar';
 import { signout } from '@/app/signin/actions';
+import { formatPrice } from '@/utils/priceUtils';
 
 type Props = {
     params: {
@@ -53,11 +54,11 @@ const ShirtDetailsPage = async ({ params }: Props) => {
                             <Rating defaultValue={2.5} precision={0.5} size="large" readOnly />
                             <span>(99 đánh giá)</span>
                         </div> */}
-                            <h2 className='text-gray-400'><del>{shirt['shirt-edition']['stock-price']} VNĐ</del></h2>
+                            <h2 className='text-gray-400'><del>{formatPrice(shirt['shirt-edition']['stock-price'])} VNĐ</del></h2>
                             <h2 style={{
                                 fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem",
                                 color: 'red'
-                            }}>{shirt['shirt-edition']['discount-price']} VNĐ</h2>
+                            }}>{formatPrice(shirt['shirt-edition']['discount-price'])} VNĐ</h2>
                             <AddToCartContent shirtId={shirt.id} />
                         </div>
                     </div>
