@@ -71,7 +71,7 @@ const SeasonsSection = () => {
         setErr("Hãy nhập Mã mùa giải");
       } else
         if (code.length > 6 || code.substring(0, 2) != "SES") {
-          setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
+          setErr("Mã mùa giải có dạng 'SES***'");
         } else
           if (name == "") {
             setErr("Hãy nhập Tên mùa giải");
@@ -99,7 +99,7 @@ const SeasonsSection = () => {
         setErr("Hãy nhập Mã mùa giải");
       } else
         if (code.length > 6 || code.substring(0, 2) != "SES") {
-          setErr("Mã mùa giải có độ dài không quá 6 ký tự và có dạng 'SES***'");
+          setErr("Mã mùa giải có dạng 'SES***'");
         } else
           if (name == "") {
             setErr("Hãy nhập Tên mùa giải");

@@ -109,7 +109,7 @@ const EditionsSection = () => {
         setErr("Hãy nhập Mã sản phẩm");
       } else
       if (code.length > 5 || code.substring(0,2) != "SE"){
-        setErr("Mã sản phẩm có độ dài không quá 5 ký tự và có dạng SE***");
+        setErr("Mã sản phẩm có dạng SE***");
       } else
       if (size == ""){
         setErr("Hãy nhập Kích thước");
@@ -158,7 +158,7 @@ const EditionsSection = () => {
         setErr("Hãy nhập Mã sản phẩm");
       } else
       if (code.length > 5 || code.substring(0,2) != "SE"){
-        setErr("Mã sản phẩm có độ dài không quá 5 ký tự và có dạng SE***");
+        setErr("Mã sản phẩm có dạng SE***");
       } else
       if (size == ""){
         setErr("Hãy nhập Kích thước");
