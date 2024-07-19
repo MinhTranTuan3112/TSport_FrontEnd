@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/utils/supabase/server'
 import { customFetch } from '@/utils/fetch/customFetch'
+import { fetchWhoAmI } from '../service/auth_service'
 
 export async function signin(formData: FormData) {
   const supabase = createClient();
@@ -22,8 +23,14 @@ export async function signin(formData: FormData) {
     redirect('/error')
   }
 
+  const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+
+  const account : BasicAccount = await fetchWhoAmI(accessToken ?? '');
+
+  let redirectUrl = account.role === 'Customer' ? '/' : '/manage/staff/tshirts';
+
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect(redirectUrl);
 }
 
 export async function signup(formData: FormData) {
