@@ -29,22 +29,22 @@ const PlayersSection = () => {
 
   useEffect(() => {
     fetchPlayers();
-  },[])
+  }, [])
 
   useEffect(() => {
     fetchPlayers();
-  },[page, search, selectedClubId])
+  }, [page, search, selectedClubId])
 
   const fetchPlayers = async () => {
     try {
-        const response = await fetchAllPlayers(page, search, selectedClubId);
-        setPlayers(response.items);
-        setTotalPage(response["total-pages"])
-        const resp = await fetchAllClubsFilter();
-        setClubs(resp);
-      } catch (error) {
-        console.error("Error fetching players",error);
-      }
+      const response = await fetchAllPlayers(page, search, selectedClubId);
+      setPlayers(response.items);
+      setTotalPage(response["total-pages"])
+      const resp = await fetchAllClubsFilter();
+      setClubs(resp);
+    } catch (error) {
+      console.error("Error fetching players", error);
+    }
   }
 
   const modalEditOpen = (player: PlayerModel) => {
@@ -70,59 +70,59 @@ const PlayersSection = () => {
 
   const handleAddPlayer = async () => {
     try {
-      if (code == ""){
+      if (code == "") {
         setErr("Hãy nhập Mã cầu thủ");
       } else
-      if (code.length > 6 || code.substring(0,3) != "PLY"){
-        setErr("Mã cầu thủ có dạng 'PLY***'");
-      } else
-      if (name == ""){
-        setErr("Hãy nhập Tên cầu thủ");
-      } else
-      if (clubId == ""){
-        setErr("Hãy chọn một Câu lạc bộ");
-      } else {
-        await addNewPlayer(code, name, Number(clubId));
-        modalClose();
-        await Swal.fire({
+        if (code.length > 6 || code.substring(0, 3) != "PLY") {
+          setErr("Mã cầu thủ có dạng 'PLY***'");
+        } else
+          if (name == "") {
+            setErr("Hãy nhập Tên cầu thủ");
+          } else
+            if (clubId == "") {
+              setErr("Hãy chọn một Câu lạc bộ");
+            } else {
+              await addNewPlayer(code, name, Number(clubId));
+              modalClose();
+              await Swal.fire({
                 title: 'Thêm cầu thủ thành công!',
                 icon: 'success'
-            });
-            fetchPlayers();
-      }
-        
-      } catch (error) {
-        console.error("Error add new player",error);
-      }
+              });
+              fetchPlayers();
+            }
+
+    } catch (error) {
+      console.error("Error add new player", error);
+    }
   }
 
-const handleUpdatePlayer = async () => {
-  try {
-      if (code == ""){
+  const handleUpdatePlayer = async () => {
+    try {
+      if (code == "") {
         setErr("Hãy nhập Mã cầu thủ");
       } else
-      if (code.length > 6 || code.substring(0,3) != "PLY"){
-        setErr("Mã cầu thủ có dạng 'PLY***'");
-      } else
-      if (name == ""){
-        setErr("Hãy nhập Tên cầu thủ");
-      } else
-      if (clubId == ""){
-        setErr("Hãy chọn một Câu lạc bộ");
-      } else {
-        await updatePlayer(selectedPlayer, code, name, Number(clubId), status);
-        modalClose();
-        await Swal.fire({
+        if (code.length > 6 || code.substring(0, 3) != "PLY") {
+          setErr("Mã cầu thủ có dạng 'PLY***'");
+        } else
+          if (name == "") {
+            setErr("Hãy nhập Tên cầu thủ");
+          } else
+            if (clubId == "") {
+              setErr("Hãy chọn một Câu lạc bộ");
+            } else {
+              await updatePlayer(selectedPlayer, code, name, Number(clubId), status);
+              modalClose();
+              await Swal.fire({
                 title: 'Chỉnh sửa cầu thủ thành công!',
                 icon: 'success'
-            });
-            fetchPlayers();
-      }
-        
-      } catch (error) {
-        console.error("Error update player",error);
-      }
-}
+              });
+              fetchPlayers();
+            }
+
+    } catch (error) {
+      console.error("Error update player", error);
+    }
+  }
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -193,31 +193,31 @@ const handleUpdatePlayer = async () => {
                     <ModalBody>
                       <div className="flex flex-row justify-center">
                         <div className="w-3/5">
-                          <Input label='Mã cầu thủ' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)}/>
-                          <Input label='Tên cầu thủ' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)}/>
+                          <Input label='Mã cầu thủ' variant='bordered' className="w-full p-2" value={code} onChange={(e) => setCode(e.target.value)} />
+                          <Input label='Tên cầu thủ' variant='bordered' className="w-full p-2" value={name} onChange={(e) => setName(e.target.value)} />
                           <Select
-            label="CLB"
-            placeholder="Chọn CLB"
-            className="w-full p-4"
-            defaultSelectedKeys={[clubId]}
-            onChange={(e) => setClubId(e.target.value)}
-          >
-            {clubs.map((club) => (
-              <SelectItem key={String(club.id)}>{club.name}</SelectItem>
-            ))}
-          </Select>
-          {isEdit && (
-            <Select
-            label="Status"
-            className="w-full p-4"
-            defaultSelectedKeys={[status]}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-              <SelectItem key={"Active"}>Active</SelectItem>
-              <SelectItem key={"Deleted"}>Unactive</SelectItem>
-          </Select>
-          )}
-          {err != "" && (
+                            label="CLB"
+                            placeholder="Chọn CLB"
+                            className="w-full p-4"
+                            defaultSelectedKeys={[clubId]}
+                            onChange={(e) => setClubId(e.target.value)}
+                          >
+                            {clubs.map((club) => (
+                              <SelectItem key={String(club.id)}>{club.name}</SelectItem>
+                            ))}
+                          </Select>
+                          {isEdit && (
+                            <Select
+                              label="Status"
+                              className="w-full p-4"
+                              defaultSelectedKeys={[status]}
+                              onChange={(e) => setStatus(e.target.value)}
+                            >
+                              <SelectItem key={"Active"}>Active</SelectItem>
+                              <SelectItem key={"Deleted"}>Unactive</SelectItem>
+                            </Select>
+                          )}
+                          {err != "" && (
                             <p className="text-2xl text-red-700 font-bold">{err}</p>
                           )}
                         </div>
@@ -299,7 +299,7 @@ const handleUpdatePlayer = async () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)} />
         </div>
       </div>
     </div>
