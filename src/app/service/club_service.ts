@@ -40,3 +40,26 @@ export const fetchAllClubs = async (page: number, search: string) => {
         return null;
     }
 };
+
+export const removeClubs = async (id: number) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'DELETE',
+            },
+            endpointPath: `/clubs/${id}`,
+            headers: {
+                'Content-Type': 'application/json-patch+json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error remove club: ${error}`);
+        return null;
+    }
+};

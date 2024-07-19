@@ -1,3 +1,6 @@
+import { customFetch } from "@/utils/fetch/customFetch";
+import { createClient } from "@/utils/supabase/client";
+
 export const fetchPagedShirts = async ({ page = 1, pageSize = 10, clubIds = [],
     playerIds = [],
     seasonIds = [],
@@ -130,5 +133,27 @@ export const fetchCreateShirt = async (request: CreateShirtRequest, accessToken:
 
     } catch (error) {
         console.error(`Error creating shirt: ${error}`);
+    }
+};
+
+export const removeShirt = async (id: number | undefined) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+        const response = await customFetch({
+            options: {
+                'method': 'DELETE',
+            },
+            endpointPath: `/shirts/${id}`,
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error remove shirt: ${error}`);
+        return null;
     }
 };

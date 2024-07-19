@@ -37,7 +37,7 @@ export const addEdition = async (code: string, size: string, sign: boolean, stoc
                 'Authorization': `Bearer ${accessToken}`
             },
             body: {
-                //"code": code,
+                "code": code,
                 "size": size,
                 "has-signature": sign,
                 "stock-price": stock,
@@ -72,7 +72,7 @@ export const updateEdition = async (id: number, code: string, size: string, sign
                 'Authorization': `Bearer ${accessToken}`
             },
             body: {
-                //"code": code,
+                "code": code,
                 "size": size,
                 "has-signature": sign,
                 "stock-price": stock,

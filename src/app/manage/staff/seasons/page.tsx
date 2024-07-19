@@ -70,7 +70,7 @@ const SeasonsSection = () => {
       if (code == "") {
         setErr("Hãy nhập Mã mùa giải");
       } else
-        if (code.length > 6 || code.substring(0, 2) != "SES") {
+        if (code.length > 6 || code.substring(0, 3) != "SES") {
           setErr("Mã mùa giải có dạng 'SES***'");
         } else
           if (name == "") {
@@ -98,7 +98,7 @@ const SeasonsSection = () => {
       if (code == "") {
         setErr("Hãy nhập Mã mùa giải");
       } else
-        if (code.length > 6 || code.substring(0, 2) != "SES") {
+        if (code.length > 6 || code.substring(0, 3) != "SES") {
           setErr("Mã mùa giải có dạng 'SES***'");
         } else
           if (name == "") {

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
-import { fetchAllClubs } from "@/app/service/club_service";
+import { fetchAllClubs, removeClubs } from "@/app/service/club_service";
 import Swal from "sweetalert2";
 
 const ClubsSection = () => {
@@ -20,7 +20,7 @@ const ClubsSection = () => {
   // const [code, setCode] = useState("");
   // const [name, setName] = useState("");
   // const [err, setErr] = useState("");
-  // const [selectedClub, setSelectedClub] = useState(0);
+   const [selectedClub, setSelectedClub] = useState(0);
   // const [status, setStatus] = useState("");
 
 useEffect(() => {
@@ -50,20 +50,20 @@ useEffect(() => {
   //   setErr("");
   // }
 
-  // const handleRemoveSeason = async () => {
-  //   try {
-  //       await removeClub(selectedClub);
-  //       setIsConfirm(false);
-  //       setSelectedClub(0);
-  //       await Swal.fire({
-  //               title: 'Xóa clb thành công!',
-  //               icon: 'success'
-  //           });
-  //           fetchClubs();
-  //     } catch (error) {
-  //       console.error("Error remove club",error);
-  //     }
-  // }
+  const handleRemoveClub = async () => {
+    try {
+        await removeClubs(selectedClub);
+        setIsConfirm(false);
+        setSelectedClub(0);
+        await Swal.fire({
+                title: 'Xóa clb thành công!',
+                icon: 'success'
+            });
+            fetchClubs();
+      } catch (error) {
+        console.error("Error remove club",error);
+      }
+  }
 
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
@@ -196,7 +196,7 @@ useEffect(() => {
                       </Chip>
                     </TableCell>
                     <TableCell>
-                      <Button
+                      {/* <Button
                         className="w-1/6 bg-yellow-500 text-white"
                         aria-label="edit"
                         onClick={() => {
@@ -208,17 +208,19 @@ useEffect(() => {
                           icon={faEdit}
                           className="text-white-500"
                         />
-                      </Button>
-                      <Button
+                      </Button> */}
+                      {club.status == "Active" && (
+                        <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="remove"
-                        // onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
+                        onClick={() => {setIsConfirm(true); setSelectedClub(club.id)}}
                       >
                         <FontAwesomeIcon
                           icon={faRemove}
                           className="text-white-500"
                         />
                       </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -245,7 +247,7 @@ useEffect(() => {
                     <Button color="danger" variant="light" onPress={onClose}>
                       Không
                     </Button>
-                    <Button color="success" onPress={onClose}>
+                    <Button color="success" onPress={handleRemoveClub}>
                       Có
                     </Button>
                   </ModalFooter>
