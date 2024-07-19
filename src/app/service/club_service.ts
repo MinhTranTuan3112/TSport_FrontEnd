@@ -3,12 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 
 export const fetchAllClubsFilter = async () => {
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: '/clubs/getall'
-        });
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/clubs/getall', { cache: 'no-store' });
 
         const data = await response.json();
         return data;
@@ -20,17 +15,12 @@ export const fetchAllClubsFilter = async () => {
 };
 
 export const fetchAllClubs = async (page: number, search: string) => {
-    let url = `/clubs?page=${page}&size=8&sortColumn=id&orderByDesc=true`;
+    let url = `https://tsportapi.azurewebsites.net/api/clubs?page=${page}&size=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&ClubRequest.Name=${search}`;
     }
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: url
-        });
+        const response = await fetch(url, { cache: 'no-store' });
 
         const data = await response.json();
         return data;
@@ -49,7 +39,7 @@ export const addNewClub = async (code: string, name: string, status: string) => 
         let newFormData = new FormData();
         newFormData.append('Code', code);
         newFormData.append('Name', name);
-        if (status != ""){
+        if (status != "") {
             newFormData.append('Status', status);
         }
         const response = await fetch('https://tsportapi.azurewebsites.net/api/clubs', {

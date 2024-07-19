@@ -3,12 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 
 export const fetchAllSeasonsFilter = async () => {
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: '/seasons/getall'
-        });
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/seasons/getall', { cache: 'no-store' });
 
         const data = await response.json();
         return data;

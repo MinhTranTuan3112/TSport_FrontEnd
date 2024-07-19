@@ -1,6 +1,6 @@
 export const fetchSeasonPlayers = async () => {
     try {
-        const response = await fetch('https://tsportapi.azurewebsites.net/api/seasonplayers');
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/seasonplayers', { cache: 'no-store' });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');

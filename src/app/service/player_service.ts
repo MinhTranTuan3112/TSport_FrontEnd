@@ -3,12 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 
 export const fetchAllPlayersFilter = async () => {
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: '/players/getall'
-        });
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/players/getall', { cache: 'no-store' });
 
         const data = await response.json();
         console.log({ data });
@@ -21,7 +16,7 @@ export const fetchAllPlayersFilter = async () => {
 }
 
 export const fetchAllPlayers = async (page: number, search: string, clubId: string) => {
-    let url = `/players?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
+    let url = `https://tsportapi.azurewebsites.net/api/players?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&name=${search}`;
     }
@@ -29,12 +24,7 @@ export const fetchAllPlayers = async (page: number, search: string, clubId: stri
         url += `&clubId=${clubId}`;
     }
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: url,
-        });
+        const response = await fetch(url, { cache: 'no-store' });
 
         const data = await response.json();
         return data;

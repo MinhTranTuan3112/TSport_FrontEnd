@@ -2,17 +2,12 @@ import { customFetch } from "@/utils/fetch/customFetch";
 import { createClient } from "@/utils/supabase/client";
 
 export const fetchAllEditions = async (page: number, search: string) => {
-    let url = `/ShirtEditions?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
+    let url = `https://tsportapi.azurewebsites.net/api/ShirtEditions?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&code=${search}`;
     }
     try {
-        const response = await customFetch({
-            options: {
-                'method': 'GET',
-            },
-            endpointPath: url,
-        });
+        const response = await fetch(url, { cache: 'no-store' });
 
         const data = await response.json();
         return data;
