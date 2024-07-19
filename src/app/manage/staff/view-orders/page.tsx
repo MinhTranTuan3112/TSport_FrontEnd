@@ -15,62 +15,61 @@ const OrdersSection = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
-  const [orders, setOrders] = useState([]); 
-
-  const [account, setAccount] = useState({});
-  const [details, setDetails] = useState([]);
+  const [orders, setOrders] = useState<PagedOrder[]>([]);
+  const [account, setAccount] = useState<BasicAccount | undefined>();
+  const [details, setDetails] = useState<FullOrderDetails[]>([]);
 
   const [selectOrder, setSelectedOrder] = useState(0);
 
   useEffect(() => {
     fetchOrders()
-  },[])
+  }, [])
 
   useEffect(() => {
     fetchOrders()
-  },[page, start, end])
+  }, [page, start, end])
 
-  const fetchOrders = async () =>{
+  const fetchOrders = async () => {
     try {
-        const response = await fetchAllOrders(page, start, end);
-        setOrders(response.items);
-        setTotalPage(response["total-pages"]);
-      } catch (error) {
-        console.error("Error fetching orders",error);
-      }
+      const response = await fetchAllOrders(page, start, end);
+      setOrders(response.items);
+      setTotalPage(response["total-pages"]);
+    } catch (error) {
+      console.error("Error fetching orders", error);
+    }
   }
 
   const modalDetailOpen = async (id: number) => {
     setViewDetail(true);
     try {
-        const response = await fetchOrder(id);
-        setAccount(response["created-account"]);
-        setDetails(response["order-details"]);
-      } catch (error) {
-        console.error("Error fetching order",error);
-      }
+      const response = await fetchOrder(id);
+      setAccount(response["created-account"]);
+      setDetails(response["order-details"]);
+    } catch (error) {
+      console.error("Error fetching order", error);
+    }
   }
 
   const modalClose = () => {
     setViewDetail(false);
     setIsConfirm(false);
     setSelectedOrder(0);
-    setAccount({});
+    setAccount(undefined);
     setDetails([]);
   }
 
   const handleCancelOrder = async () => {
     try {
-        await cancelOrder(selectOrder);
-        modalClose();
-        await Swal.fire({
-                title: 'Đã hủy đơn hàng!',
-                icon: 'success'
-            });
-            fetchOrders();
-      } catch (error) {
-        console.error("Error cancel order",error);
-      }
+      await cancelOrder(selectOrder);
+      modalClose();
+      await Swal.fire({
+        title: 'Đã hủy đơn hàng!',
+        icon: 'success'
+      });
+      fetchOrders();
+    } catch (error) {
+      console.error("Error cancel order", error);
+    }
   }
 
   return (
@@ -123,10 +122,10 @@ const OrdersSection = () => {
                     </TableCell>
                     <TableCell className="text-xl">
                       {order.total.toLocaleString('en-US', {
-  style: 'decimal',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2
-})} VNĐ
+                        style: 'decimal',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })} VNĐ
                     </TableCell>
                     <TableCell className="text-xl">
                       {order["order-date"]}
@@ -141,10 +140,10 @@ const OrdersSection = () => {
                             : order.status === "Pending"
                               ? "primary"
                               : order.status === "Delivered"
-                              ? "warning":
-                              order.status === "Shipped"
-                              ? "secondary" :
-                              "danger"
+                                ? "warning" :
+                                order.status === "Shipped"
+                                  ? "secondary" :
+                                  "danger"
                         }
                       >
                         {order.status}
@@ -180,9 +179,9 @@ const OrdersSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)}/>
+          <Pagination showControls total={totalPage} initialPage={1} onChange={(newPage) => setPage(newPage)} />
 
-          <Modal size="xl" isOpen={isConfirm} onClose={() =>modalClose}>
+          <Modal size="xl" isOpen={isConfirm} onClose={() => modalClose}>
             <ModalContent>
               {(onClose) => (
                 <>
@@ -219,32 +218,32 @@ const OrdersSection = () => {
                   <ModalBody>
                     <div className="flex flex-row justify-center">
                       <div className="w-4/5">
-                      <p className="w-full p-2 text-xl font-bold">Người mua: {account.email}</p>
+                        <p className="w-full p-2 text-xl font-bold">Người mua: {account?.email}</p>
                         <Table aria-label="Orders Table">
-            <TableHeader>
-              <TableColumn className="text-2xl">Mã áo</TableColumn>
-              <TableColumn className="text-2xl">Kích thước</TableColumn>
-              <TableColumn className="text-2xl">Số lượng</TableColumn>
-              <TableColumn className="text-2xl">Thành tiền</TableColumn>
-            </TableHeader>
-              <TableBody>
-                {details.map((detail, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="text-xl">
-                      {detail.shirt.code}
-                    </TableCell>
-                    <TableCell className="text-xl">
-                      {detail.size}
-                    </TableCell>
-                    <TableCell className="text-xl">
-                      {detail.quantity}
-                    </TableCell>
-                    <TableCell className="text-xl">
-                      {detail.subtotal}
-                    </TableCell>
-                  </TableRow>))}
-              </TableBody>
-          </Table>
+                          <TableHeader>
+                            <TableColumn className="text-2xl">Mã áo</TableColumn>
+                            <TableColumn className="text-2xl">Kích thước</TableColumn>
+                            <TableColumn className="text-2xl">Số lượng</TableColumn>
+                            <TableColumn className="text-2xl">Thành tiền</TableColumn>
+                          </TableHeader>
+                          <TableBody>
+                            {details.map((detail, index) => (
+                              <TableRow key={index}>
+                                <TableCell className="text-xl">
+                                  {detail.shirt.code}
+                                </TableCell>
+                                <TableCell className="text-xl">
+                                  {detail.size}
+                                </TableCell>
+                                <TableCell className="text-xl">
+                                  {detail.quantity}
+                                </TableCell>
+                                <TableCell className="text-xl">
+                                  {detail.subtotal}
+                                </TableCell>
+                              </TableRow>))}
+                          </TableBody>
+                        </Table>
                       </div>
                     </div>
                   </ModalBody>
