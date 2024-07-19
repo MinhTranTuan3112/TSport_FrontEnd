@@ -85,6 +85,12 @@ export const SidebarWrapper = () => {
 
             <SidebarMenu title="">
               <SidebarItem
+              title="Dashboard"
+              icon={<HomeIcon />}
+              isActive={pathname === "/manage/admin"}
+              href="/manage/admin"
+            />
+              <SidebarItem
                 isActive={pathname === "/manage/staff/tshirts"}
                 title="T-Shirt"
                 icon={<FontAwesomeIcon

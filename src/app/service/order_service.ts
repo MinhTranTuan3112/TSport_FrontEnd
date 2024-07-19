@@ -173,3 +173,31 @@ export const cancelOrder = async (id: number) => {
         return null;
     }
 };
+
+export const clubOrderReport = async (clubId: number, start: string, end: string) =>{
+    let url = `/Orders/club-order-report?`;
+    if (clubId != 0) {
+        url += `&clubId=${clubId}`;
+    }
+    if (start != "") {
+        url += `&startDate=${start}`;
+    }
+    if (end != "") {
+        url += `&endDate=${end}`;
+    }
+    try {
+        const response = await customFetch({
+            options: {
+                'method': 'GET',
+            },
+            endpointPath: url,
+        });
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error(`Error: ${error}`);
+        return null;
+    }
+}
