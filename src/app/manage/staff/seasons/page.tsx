@@ -241,6 +241,7 @@ const SeasonsSection = () => {
             <TableHeader>
               <TableColumn className="text-2xl">Mã mùa giải</TableColumn>
               <TableColumn className="text-2xl">Tên mùa giải</TableColumn>
+              <TableColumn className="text-2xl">Câu lạc bộ</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
               <TableColumn className="text-2xl text-center">...</TableColumn>
             </TableHeader>
@@ -257,6 +258,9 @@ const SeasonsSection = () => {
                     </TableCell>
                     <TableCell className="text-2xl">
                       {season.name}
+                    </TableCell>
+                    <TableCell className="text-2xl">
+                      {clubs.filter(club => club.id == season["club-id"])[0]?.name}
                     </TableCell>
                     <TableCell className="text-2xl">
                       <Chip

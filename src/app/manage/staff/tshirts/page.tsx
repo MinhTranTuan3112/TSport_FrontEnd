@@ -8,9 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
 import { fetchPagedShirts, fetchShirtDetails, fetchShirts, removeShirt } from "@/app/service/shirt_service";
 import SaveButton from "./SaveButton";
-import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
+import { addSeasonPlayer, fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
 import { fetchShirtEditions } from "@/app/service/edition_service";
 import Swal from "sweetalert2";
+import { fetchAllSeasons } from "@/app/service/season_service";
+import { fetchAllClubsFilter } from "@/app/service/club_service";
+import { fetchAllPlayersFilter } from "@/app/service/player_service";
 
 const ShirtsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +27,12 @@ const ShirtsSection = () => {
   const [currentShirt, setCurrentShirt] = useState<ShirtDetails>();
   const [seasonPlayers, setSeasonPlayers] = useState<SeasonPlayerDetails[]>([]);
   const [shirtEditions, setShirtEditions] = useState<ShirtEdition[]>([]);
+  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
+  const [clubs,setClubs] = useState<ClubFilter[]>([]);
+  const [players, setPlayers] = useState<PlayerFilter[]>([]);
+  const [next, setNext] = useState(false);
+  const [seasonId, setSeasonId] = useState("");
+  const [playerId, setPlayerId] = useState("");
 
   const [createImageSrc, setCreateImageSrc] = useState("https://nextui-docs-v2.vercel.app/images/album-cover.png");
   const handleCreateImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +59,8 @@ const ShirtsSection = () => {
       setShirtEditions(data);
     });
 
+    getAllSeason();
+
     const timer = setTimeout(() => {
       fetchShirts(page, 4, keyword).then(data => {
         setpagedResult(data);
@@ -75,6 +86,19 @@ const ShirtsSection = () => {
     }
   }, [currentShirtId]);
 
+  const getAllSeason = async () => {
+    try {
+      const response = await fetchAllSeasons(page, "");
+      setSeasons(response.items);
+      const res = await fetchAllClubsFilter();
+      setClubs(res);
+      const resp = await fetchAllPlayersFilter();
+      setPlayers(resp);
+    } catch (error) {
+      console.error("Error fetching seasons", error);
+    }
+  }
+
   const handleRemoveShirt = async () => {
     try {
       await removeShirt(currentShirtId);
@@ -90,6 +114,22 @@ const ShirtsSection = () => {
     } catch (error) {
       console.error("Error remove season", error);
     }
+  }
+
+  const handleNext = async () => {
+      seasonPlayers.filter(sp => sp["season-id"] == Number(seasonId) && sp["player-id"] == Number(playerId)).length == 0 &&
+      await addSeasonPlayer(Number(seasonId), Number(playerId));
+      setNext(true);
+      fetchSeasonPlayers().then(data => {
+      setSeasonPlayers(data);
+    });
+  }
+
+  const modalClose = () => {
+    setSeasonId("");
+    setPlayerId("");
+    setIsOpen(false);
+    setNext(false);
   }
 
   return (
@@ -140,13 +180,10 @@ const ShirtsSection = () => {
             <Button onClick={() => setIsOpen(true)} color='primary'>Thêm áo đấu</Button>
 
             <Modal isOpen={isOpen}
-              onClose={() => {
-                setIsOpen(false);
-                setIsEdit(false);
-              }} placement='top-center' size="4xl">
+              onClose={modalClose} placement='top-center' size="4xl">
               <ModalContent>
                 {(onClose) => (
-                  <form id="create_shirt_form">
+                  next ? (<form id="create_shirt_form">
                     <ModalHeader className='flex flex-col gap-1'>
                       {isEdit ? "Sửa áo đấu" : "Thêm áo đấu"}
                     </ModalHeader>
@@ -214,7 +251,7 @@ const ShirtsSection = () => {
                       </div>
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="danger" variant="flat" onClick={onClose}>
+                      <Button color="danger" variant="flat" onClick={modalClose}>
                         Đóng
                       </Button>
                       <SaveButton isEdit={isEdit} onClose={onClose} />
@@ -222,7 +259,51 @@ const ShirtsSection = () => {
                         {isEdit ? "Lưu" : "Thêm"}
                       </Button> */}
                     </ModalFooter>
-                  </form>
+                  </form>) : (
+                  <>
+                    <ModalHeader className='flex flex-col gap-1'>
+                      {isEdit ? "Sửa áo đấu" : "Thêm áo đấu"}
+                    </ModalHeader>
+                    <ModalBody>
+                      <div className="flex flex-row">
+                        <div className="w-2/5">
+                          <Select label="Chọn mùa giải - câu lạc bộ"
+                            className="w-full p-2"
+                            value={seasonId}
+                            onChange={(e) => setSeasonId(e.target.value)}
+                            required>
+                            {seasons.map((season) => (
+                              <SelectItem key={season.id.toString()}>
+                                {`${season.name} - ${clubs.filter(club => club.id == season["club-id"])[0]?.name}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
+
+                          <Select
+                            label="Chọn cầu thủ"
+                            className="w-full p-2"
+                            value={playerId}
+                            onChange={(e)=> setPlayerId(e.target.value)}
+                            required
+                          >
+                            {players.map((player) => (
+                              <SelectItem key={player.id}>
+                                {player.name}
+                              </SelectItem>
+                            ))}
+                          </Select>
+                        </div>
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="flat" onClick={modalClose}>
+                        Đóng
+                      </Button>
+                      <Button color="primary" onPress={handleNext}>
+                        Next
+                      </Button>
+                    </ModalFooter>
+                  </>)
                 )}
               </ModalContent>
             </Modal>
