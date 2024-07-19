@@ -13,7 +13,7 @@ type Props = {
     cartInfo: OrderInCart;
     accessToken: string;
 }
-
+import { redirect } from 'next/navigation';
 // const rows = [
 //     {
 //         key: "1",
@@ -158,6 +158,7 @@ const CartTable = ({ cartInfo, accessToken }: Props) => {
                 confirmButtonText: 'OK',
                 confirmButtonColor: 'red'
             });
+            redirect('/'); // Redirect to home page
         }
     };
 
