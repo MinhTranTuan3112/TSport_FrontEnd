@@ -307,9 +307,9 @@ const ShirtsSection = () => {
                         size="md"
                         variant="flat"
                         color={
-                          shirt.status === "active"
+                          shirt.status === "Active"
                             ? "success"
-                            : shirt.status === "paused"
+                            : shirt.status === "Delected"
                               ? "danger"
                               : "warning"
                         }

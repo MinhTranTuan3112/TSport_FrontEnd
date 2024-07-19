@@ -20,6 +20,8 @@ const OrdersSection = () => {
   const [details, setDetails] = useState<FullOrderDetails[]>([]);
 
   const [selectOrder, setSelectedOrder] = useState(0);
+  const [orderStatus, setOrderStatus] = useState("");
+  const [err, setErr] = useState("");
 
   useEffect(() => {
     fetchOrders()
@@ -60,13 +62,14 @@ const OrdersSection = () => {
 
   const handleCancelOrder = async () => {
     try {
-      await cancelOrder(selectOrder);
+        await cancelOrder(selectOrder);
       modalClose();
       await Swal.fire({
         title: 'Đã hủy đơn hàng!',
         icon: 'success'
       });
       fetchOrders();
+      
     } catch (error) {
       console.error("Error cancel order", error);
     }
@@ -128,7 +131,7 @@ const OrdersSection = () => {
                       })} VNĐ
                     </TableCell>
                     <TableCell className="text-xl">
-                      {order["order-date"]}
+                      {order["order-date"].split("T")[0] + " " + order["order-date"].split("T")[1]}
                     </TableCell>
                     <TableCell className="text-xl">
                       <Chip
@@ -160,7 +163,8 @@ const OrdersSection = () => {
                           className="text-white-500"
                         />
                       </Button>
-                      <Button
+                      {order.status == "Pending" && (
+                        <Button
                         className="w-1/6 bg-red-500 text-white"
                         aria-label="cancel"
                         onClick={() => {
@@ -173,6 +177,7 @@ const OrdersSection = () => {
                           className="text-white-500"
                         />
                       </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

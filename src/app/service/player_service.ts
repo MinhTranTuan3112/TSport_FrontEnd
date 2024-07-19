@@ -21,7 +21,7 @@ export const fetchAllPlayersFilter = async () => {
 }
 
 export const fetchAllPlayers = async (page: number, search: string, clubId: string) => {
-    let url = `/players?pageNumber=${page}&pageSize=10&sortColumn=id&orderByDesc=true`;
+    let url = `/players?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&name=${search}`;
     }

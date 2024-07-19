@@ -20,7 +20,7 @@ export const fetchAllClubsFilter = async () => {
 };
 
 export const fetchAllClubs = async (page: number, search: string) => {
-    let url = `/clubs?page=${page}&size=10&sortColumn=id&orderByDesc=true`;
+    let url = `/clubs?page=${page}&size=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&ClubRequest.Name=${search}`;
     }

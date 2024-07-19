@@ -2,7 +2,7 @@ import { customFetch } from "@/utils/fetch/customFetch";
 import { createClient } from "@/utils/supabase/client";
 
 export const fetchAllEditions = async (page: number, search: string) => {
-    let url = `/ShirtEditions?pageNumber=${page}&pageSize=10&sortColumn=id&orderByDesc=true`;
+    let url = `/ShirtEditions?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&code=${search}`;
     }

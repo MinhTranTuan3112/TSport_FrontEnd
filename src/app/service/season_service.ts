@@ -20,7 +20,7 @@ export const fetchAllSeasonsFilter = async () => {
 };
 
 export const fetchAllSeasons = async (page: number, search: string) => {
-    let url = `/seasons?pageNumber=${page}&pageSize=10&sortColumn=id&orderByDesc=true`;
+    let url = `/seasons?pageNumber=${page}&pageSize=8&sortColumn=id&orderByDesc=true`;
     if (search != "") {
         url += `&code=${search}`;
     }

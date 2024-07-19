@@ -42,8 +42,8 @@ export const SidebarWrapper = () => {
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
-            <SidebarMenu title="Admin">
-              {/* <SidebarItem
+            {/* <SidebarMenu title="Admin">
+               <SidebarItem
                 isActive={pathname === "/accounts"}
                 title="Accounts"
                 icon={<AccountsIcon />}
@@ -58,20 +58,20 @@ export const SidebarWrapper = () => {
                 icon={<BalanceIcon />}
                 items={["Banks Accounts", "Credit Cards", "Loans"]}
                 title="Balances"
-              /> */}
-              <SidebarItem
+              />
+               <SidebarItem
               title="Dashboard"
               icon={<HomeIcon />}
               isActive={pathname === "/manage/admin"}
               href="/manage/admin"
-            />
-              {/* <SidebarItem
+            /> 
+               <SidebarItem
                 isActive={pathname === "/manage/admin/accounts"}
                 title="Khách hàng"
                 icon={<CustomersIcon />}
                 href="/manage/admin/accounts"
-              /> */}
-              {/* <SidebarItem
+              />
+               <SidebarItem
                 isActive={pathname === "/products"}
                 title="Products"
                 icon={<ProductsIcon />}
@@ -80,10 +80,10 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/reports"}
                 title="Reports"
                 icon={<ReportsIcon />}
-              /> */}
-            </SidebarMenu>
+              />
+            </SidebarMenu> */}
 
-            <SidebarMenu title="Staff">
+            <SidebarMenu title="">
               <SidebarItem
                 isActive={pathname === "/manage/staff/tshirts"}
                 title="T-Shirt"
@@ -112,7 +112,7 @@ export const SidebarWrapper = () => {
                 href="/manage/staff/view-orders"
               />
               <Accordion>
-      <AccordionItem key="1" title="ABCD" >
+      <AccordionItem key="1" title="Quản lý" >
                 <SidebarItem
                 isActive={pathname === "/manage/staff/seasons"}
                 title="Mùa giải"
