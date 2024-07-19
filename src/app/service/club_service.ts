@@ -41,6 +41,61 @@ export const fetchAllClubs = async (page: number, search: string) => {
     }
 };
 
+export const addNewClub = async (code: string, name: string, status: string) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+
+        let newFormData = new FormData();
+        newFormData.append('Code', code);
+        newFormData.append('Name', name);
+        if (status != ""){
+            newFormData.append('Status', status);
+        }
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/clubs', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                // 'Content-Type': 'multipart/form-data'
+            },
+            body: newFormData
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error add new club: ${error}`);
+        return null;
+    }
+};
+
+export const updateClub = async (id: number, code: string, name: string, status: string) => {
+    try {
+        const supabase = createClient();
+        const accessToken = (await supabase.auth.getSession()).data.session?.access_token;
+
+        let newFormData = new FormData();
+        newFormData.append('id', id.toString());
+        newFormData.append('Code', code);
+        newFormData.append('Name', name);
+        newFormData.append('Status', status);
+        const response = await fetch(`https://tsportapi.azurewebsites.net/api/clubs/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                // 'Content-Type': 'multipart/form-data'
+            },
+            body: newFormData
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error(`Error update club: ${error}`);
+        return null;
+    }
+};
+
 export const removeClubs = async (id: number) => {
     try {
         const supabase = createClient();

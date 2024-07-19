@@ -118,7 +118,7 @@ export const removeEdition = async (id: number) => {
 
 export const fetchShirtEditions = async () => {
     try {
-        const response = await fetch('http://localhost:8080/api/shirteditions/getall', {
+        const response = await fetch('https://tsportapi.azurewebsites.net/api/shirteditions/getall', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

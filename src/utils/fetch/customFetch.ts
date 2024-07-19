@@ -13,7 +13,7 @@ type Props = {
 export const customFetch = async ({
     endpointPath,
     options = {},
-    baseUrl = 'http://localhost:8080/api',
+    baseUrl = 'https://tsportapi.azurewebsites.net/api',
     headers = {},
     body
 }: Props): Promise<Response> => {
