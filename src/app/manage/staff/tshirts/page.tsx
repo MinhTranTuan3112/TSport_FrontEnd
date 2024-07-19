@@ -1,17 +1,45 @@
 "use client";
 import { HouseIcon } from "@/components/icons/breadcrumb/house-icon"
 import { RenderCell } from "@/components/table/render-cell"
-import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react"
-import React, { useState } from 'react'
+import { Button, Chip, Image, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from "@nextui-org/react"
+import React, { useEffect, useState } from 'react'
 import { faEdit, faRemove, faEye, faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SearchIcon } from "@/components/icons/searchicon";
+import { fetchPagedShirts, fetchShirtDetails, fetchShirts } from "@/app/service/shirt_service";
+import SaveButton from "./SaveButton";
+import { fetchSeasonPlayers } from "@/app/service/seasonplayer_service";
+import { fetchShirtEditions } from "@/app/service/edition_service";
 
 const ShirtsSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  const [pagedResult, setpagedResult] = useState<PagedResult<PagedShirt>>();
+  const [currentShirtId, setCurrentShirtId] = useState<number | undefined>();
+  const [currentShirt, setCurrentShirt] = useState<ShirtDetails>();
+  const [seasonPlayers, setSeasonPlayers] = useState<SeasonPlayerDetails[]>([]);
+  const [shirtEditions, setShirtEditions] = useState<ShirtEdition[]>([]);
+
+  const [createImageSrc, setCreateImageSrc] = useState("https://nextui-docs-v2.vercel.app/images/album-cover.png");
+  const handleCreateImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file && file.type.substr(0, 5) === "image") {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Use a type assertion to tell TypeScript that reader.result will be a string
+        setCreateImageSrc(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setCreateImageSrc("https://nextui-docs-v2.vercel.app/images/album-cover.png"); // Reset to default or placeholder if not an image
+    }
+  };
+
+
   const shirts = [
     {
       id: 1,
@@ -68,6 +96,43 @@ const ShirtsSection = () => {
       status: "status",
     },
   ];
+
+  useEffect(() => {
+
+    fetchSeasonPlayers().then(data => {
+      setSeasonPlayers(data);
+    });
+
+    fetchShirtEditions().then(data => {
+      setShirtEditions(data);
+    });
+
+    const timer = setTimeout(() => {
+      fetchShirts(page, 4, keyword).then(data => {
+        setpagedResult(data);
+      });
+    }, 400);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [page, keyword]);
+
+  useEffect(() => {
+
+    if (currentShirtId) {
+      fetchShirtDetails(currentShirtId ?? 0).then(data => {
+        setCurrentShirt(data);
+      });
+    }
+
+
+    return () => {
+
+    }
+  }, [currentShirtId]);
+
+
   return (
     <div className="my-14 lg:px-6 max-w-[95rem] mx-auto w-full flex flex-col gap-4">
       <ul className="flex">
@@ -103,7 +168,12 @@ const ShirtsSection = () => {
               input: "w-full",
               mainWrapper: "w-full",
             }}
-            placeholder="Search..."
+            placeholder="Nhập tên áo đấu..."
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
@@ -117,7 +187,7 @@ const ShirtsSection = () => {
               }} placement='top-center' size="4xl">
               <ModalContent>
                 {(onClose) => (
-                  <>
+                  <form id="create_shirt_form">
                     <ModalHeader className='flex flex-col gap-1'>
                       {isEdit ? "Sửa áo đấu" : "Thêm áo đấu"}
                     </ModalHeader>
@@ -127,26 +197,60 @@ const ShirtsSection = () => {
                           <Image
                             isBlurred
                             width={240}
-                            src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
-                            alt="NextUI Album Cover"
+                            src={createImageSrc}
+                            alt="..."
                             className="m-5"
                           />
                           <Input
+                            onChange={handleCreateImageChange}
                             type="file"
+                            name="Images"
                             accept="image/*"
                           />
                         </div>
                         <div className="w-3/5">
-                          <Input label='Mã sản phẩm' variant='bordered' className="w-full p-2" />
-                          <Input label='Mô tả' variant='bordered' className="w-full p-2" />
+                          <Input label='Mã áo' name="Code" variant='bordered' className="w-full p-2" required />
+                          <Input label='Tên áo' name="Name" variant='bordered' className="w-full p-2" required />
+                          <Textarea
+                            label="Mô tả áo"
+                            placeholder="Nhập mô tả"
+                            className="w-full p-2"
+                            name="Description"
+                            required
+                          />
                           <Input
                             label="Số lượng"
+                            name="Quantity"
                             variant="bordered"
                             className="w-full p-2"
+                            required
                           />
-                          <Input label='Phiên bản' variant='bordered' className="w-full p-2" />
-                          <Input label='Cầu thủ' variant='bordered' className="w-full p-2" />
-                          <Input label='Trạng thái' variant='bordered' className="w-full p-2" />
+                          {/* <Input label='Mã phiên bản' type="number" name="ShirtEditionId" variant='bordered' className="w-full p-2" required/> */}
+                          {/* <Input label='Mã bộ mùa giải và cầu thủ' type="number" name="SeasonPlayerId" variant='bordered' className="w-full p-2" /> */}
+
+                          <Select label="Chọn phiên bản"
+                            className="w-full p-2"
+                            name="ShirtEditionId"
+                            required>
+                            {shirtEditions.map((shirtEdition) => (
+                              <SelectItem key={shirtEdition.id}>
+                                {`${shirtEdition.size} - ${shirtEdition.color}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
+
+                          <Select
+                            label="Chọn bộ mùa giải, cầu thủ, câu lạc bộ"
+                            className="w-full p-2"
+                            name="SeasonPlayerId"
+                            required
+                          >
+                            {seasonPlayers.map((seasonPlayer) => (
+                              <SelectItem key={seasonPlayer.id}>
+                                {`${seasonPlayer.season.name} - ${seasonPlayer.player.name} - ${seasonPlayer.season.club?.name}`}
+                              </SelectItem>
+                            ))}
+                          </Select>
                         </div>
                       </div>
                     </ModalBody>
@@ -154,11 +258,12 @@ const ShirtsSection = () => {
                       <Button color="danger" variant="flat" onClick={onClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose}>
+                      <SaveButton isEdit={isEdit} onClose={onClose} />
+                      {/* <Button color="primary" onPress={onClose}>
                         {isEdit ? "Lưu" : "Thêm"}
-                      </Button>
+                      </Button> */}
                     </ModalFooter>
-                  </>
+                  </form>
                 )}
               </ModalContent>
             </Modal>
@@ -170,45 +275,41 @@ const ShirtsSection = () => {
         <div className=" w-full flex flex-col gap-4">
           <Table aria-label="Users Table">
             <TableHeader>
-              <TableColumn className="text-2xl">Mã Sản phẩm</TableColumn>
+              <TableColumn className="text-2xl">Mã</TableColumn>
+              <TableColumn className="text-2xl">Tên áo</TableColumn>
               <TableColumn className="text-2xl">Mô tả</TableColumn>
               <TableColumn className="text-2xl">Số lượng</TableColumn>
-              <TableColumn className="text-2xl">Phiên bản</TableColumn>
-              <TableColumn className="text-2xl">Cầu thủ</TableColumn>
               <TableColumn className="text-2xl">Trạng thái</TableColumn>
               <TableColumn className="text-2xl">...</TableColumn>
             </TableHeader>
-            {shirts.length == 0 ? (
-              <TableBody emptyContent={"No data to display."}>
+            {!pagedResult || pagedResult?.items.length == 0 ? (
+              <TableBody emptyContent={"Không có áo nào."}>
                 {[]}
               </TableBody>
             ) : (
               <TableBody>
-                {shirts.map((shirt, index) => (
+                {pagedResult.items.map((shirt, index) => (
                   <TableRow key={index}>
-                    <TableCell className="text-2xl">
-                      {shirt.id}
+                    <TableCell className="text-xl">
+                      {shirt.code}
                     </TableCell>
-                    <TableCell className="text-2xl">
+                    <TableCell className="text-xl">
+                      {shirt.name}
+                    </TableCell>
+                    <TableCell className="text-xl">
                       {shirt.description}
                     </TableCell>
-                    <TableCell className="text-2xl">
+                    <TableCell className="text-xl">
                       {shirt.quantity}
                     </TableCell>
-                    <TableCell className="text-2xl">
-                      {shirt.version}
-                    </TableCell>
-                    <TableCell className="text-2xl">
-                      {shirt.player}
-                    </TableCell>
-                    <TableCell className="text-2xl">
+                    <TableCell className="text-xl">
                       <Chip
                         size="md"
                         variant="flat"
                         color={
-                          shirt.status === "active"
+                          shirt.status === "Active"
                             ? "success"
-                            : shirt.status === "paused"
+                            : shirt.status === "Delected"
                               ? "danger"
                               : "warning"
                         }
@@ -220,7 +321,10 @@ const ShirtsSection = () => {
                       <Button
                         className="w-1/6 text-black"
                         aria-label="detail"
-                        onClick={() => setViewDetail(true)}
+                        onClick={() => {
+                          setCurrentShirtId(shirt.id);
+                          setViewDetail(true);
+                        }}
                       >
                         <FontAwesomeIcon
                           icon={faEye}
@@ -256,7 +360,7 @@ const ShirtsSection = () => {
               </TableBody>
             )}
           </Table>
-          <Pagination showControls total={10} initialPage={1} />
+          <Pagination onChange={(newPage) => setPage(newPage)} showControls total={pagedResult?.["total-pages"] ?? 1} initialPage={page} />
 
           <Modal size="2xl" isOpen={isConfirm} onClose={() => setIsConfirm(false)}>
             <ModalContent>
@@ -298,18 +402,20 @@ const ShirtsSection = () => {
                         <Image
                           isBlurred
                           width={240}
-                          src="https://nextui-docs-v2.vercel.app/images/album-cover.png"
+                          src={currentShirt?.images?.[0]?.url ?? "https://nextui-docs-v2.vercel.app/images/album-cover.png"}
                           alt="NextUI Album Cover"
                           className="m-5"
                         />
                       </div>
                       <div className="w-3/5">
-                        <p className="w-full p-2">Mã sản phẩm</p>
-                        <p className="w-full p-2">Mô tả</p>
-                        <p className="w-full p-2">Số lượng</p>
-                        <p className="w-full p-2">Phiên bản</p>
-                        <p className="w-full p-2">Cầu thủ</p>
-                        <p className="w-full p-2">Trạng thái</p>
+                        <p className="w-full p-2">Mã sản phẩm: {currentShirt?.code}</p>
+                        <p className="w-full p-2">Tên áo: {currentShirt?.name}</p>
+                        <p className="w-full p-2">Mô tả: {currentShirt?.description}</p>
+                        <p className="w-full p-2">Số lượng: {currentShirt?.quantity}</p>
+                        <p className="w-full p-2">Phiên bản: {`${currentShirt?.["shirt-edition"].size} - ${currentShirt?.["shirt-edition"].color}`}</p>
+                        <p className="w-full p-2">Cầu thủ: {`${currentShirt?.["season-player"].player.name}`}</p>
+                        <p className="w-full p-2">Câu lạc bộ: {`${currentShirt?.["season-player"].season.club.name}`}</p>
+                        <p className="w-full p-2">Mùa giải: {`${currentShirt?.["season-player"].season.name}`}</p>
                       </div>
                     </div>
                   </ModalBody>

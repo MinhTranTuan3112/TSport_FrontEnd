@@ -19,7 +19,7 @@ import { FilterIcon } from "../icons/sidebar/filter-icon";
 import { useSidebarContext } from "../layout/layout-context";
 import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { usePathname } from "next/navigation";
-import { faSoccerBall, faPersonRunning, faPeopleGroup, faTShirt } from "@fortawesome/free-solid-svg-icons";
+import { faSoccerBall, faPersonRunning, faPeopleGroup, faTShirt, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const SidebarWrapper = () => {
@@ -37,12 +37,13 @@ export const SidebarWrapper = () => {
         })}
       >
         <div className={Sidebar.Header()}>
-          <CompaniesDropdown />
+          {/* <CompaniesDropdown /> */}
+          <p className="text-3xl">TSport</p>
         </div>
         <div className="flex flex-col justify-between h-full">
           <div className={Sidebar.Body()}>
-            <SidebarMenu title="Admin">
-              {/* <SidebarItem
+            {/* <SidebarMenu title="Admin">
+               <SidebarItem
                 isActive={pathname === "/accounts"}
                 title="Accounts"
                 icon={<AccountsIcon />}
@@ -57,20 +58,20 @@ export const SidebarWrapper = () => {
                 icon={<BalanceIcon />}
                 items={["Banks Accounts", "Credit Cards", "Loans"]}
                 title="Balances"
-              /> */}
-              <SidebarItem
+              />
+               <SidebarItem
               title="Dashboard"
               icon={<HomeIcon />}
               isActive={pathname === "/manage/admin"}
               href="/manage/admin"
-            />
-              <SidebarItem
+            /> 
+               <SidebarItem
                 isActive={pathname === "/manage/admin/accounts"}
                 title="Khách hàng"
                 icon={<CustomersIcon />}
                 href="/manage/admin/accounts"
               />
-              {/* <SidebarItem
+               <SidebarItem
                 isActive={pathname === "/products"}
                 title="Products"
                 icon={<ProductsIcon />}
@@ -79,10 +80,10 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/reports"}
                 title="Reports"
                 icon={<ReportsIcon />}
-              /> */}
-            </SidebarMenu>
+              />
+            </SidebarMenu> */}
 
-            <SidebarMenu title="Staff">
+            <SidebarMenu title="">
               <SidebarItem
                 isActive={pathname === "/manage/staff/tshirts"}
                 title="T-Shirt"
@@ -101,8 +102,17 @@ export const SidebarWrapper = () => {
                             />}
                 href="/manage/staff/shirt-editions"
               />
+              <SidebarItem
+                isActive={pathname === "/manage/staff/view-orders"}
+                title="Đơn hàng"
+                icon={<FontAwesomeIcon
+                              icon={faShoppingCart}
+                              className="text-white-500"
+                            />}
+                href="/manage/staff/view-orders"
+              />
               <Accordion>
-      <AccordionItem key="1" title="ABCD" >
+      <AccordionItem key="1" title="Quản lý" >
                 <SidebarItem
                 isActive={pathname === "/manage/staff/seasons"}
                 title="Mùa giải"
@@ -110,7 +120,7 @@ export const SidebarWrapper = () => {
                               icon={faSoccerBall}
                               className="text-black-500"
                             />}
-                href="/manage/staff/season"
+                href="/manage/staff/seasons"
               />
               <SidebarItem
                 isActive={pathname === "/manage/staff/clubs"}

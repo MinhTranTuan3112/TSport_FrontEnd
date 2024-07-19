@@ -11,11 +11,11 @@ type PagedShirt = {
     "created-account-id": number;
     "modified-date": string;
     "modified-account-id": number;
-    images: {
+    images: [{
       id: number;
       url: string;
       "shirt-id": number;
-    }[];
+    }];
     "shirt-edition": {
       id: number;
       code: string;

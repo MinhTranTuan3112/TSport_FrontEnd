@@ -25,7 +25,7 @@ const CartDetailsPage = async (props: Props) => {
     return (
         <>
         <MainNavBar signout={signout} />
-            <div className="py-10">
+            <div className="py-10 min-h-[600px]">
                 {!cartInfo ? <h1 className='text-center text-3xl font-bold'>Giỏ hàng của bạn trống</h1>
                     : <CartTable accessToken={accessToken} cartInfo={cartInfo} />
                 }

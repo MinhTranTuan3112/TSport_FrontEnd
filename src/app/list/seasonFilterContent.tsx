@@ -21,7 +21,7 @@ const SeasonFilterContent = ({ seasons, seasonIds }: Props) => {
         const startPriceParam = searchParams.get('startPrice') || '';
         const endPriceParam = searchParams.get('endPrice') || '';
 
-        let url = `/list?sortColumn=${sortColumn}&orderByDesc=${orderByDesc}`;
+        let url = `/list?sortColumn=${sortColumn}&orderByDesc=${orderByDesc}&page=1`;
         
         if (value.length > 0) {
            url += `&seasonIds=${value.join(',')}`;
